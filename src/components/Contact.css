@@ -57,8 +57,8 @@
 .info-content {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  padding: 1.5rem;
+  gap: 1.25rem;
+  padding: 2rem 1.75rem;
   text-decoration: none;
   color: inherit;
 }
@@ -172,11 +172,15 @@
 }
 
 .btn-large {
-  padding: 1.125rem 2.5rem;
+  padding: 1.25rem 2.75rem;
   font-size: 1.1rem;
   display: inline-flex;
   align-items: center;
   gap: 0.75rem;
+}
+
+.btn-large:hover {
+  color: var(--text-primary);
 }
 
 .btn-large svg {
