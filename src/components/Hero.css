@@ -218,6 +218,12 @@
   transform: translateX(-50%);
 }
 
+@media (max-width: 768px) {
+  .scroll-indicator {
+    display: none;
+  }
+}
+
 .mouse {
   width: 24px;
   height: 36px;
