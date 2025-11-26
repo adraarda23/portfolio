@@ -1,0 +1,51 @@
+.app {
+  opacity: 0;
+  transition: opacity 0.5s ease-in;
+}
+
+.app.loaded {
+  opacity: 1;
+}
+
+main {
+  position: relative;
+}
+
+section {
+  min-height: 100vh;
+  padding: 5rem 0;
+  position: relative;
+}
+
+@media (max-width: 768px) {
+  section {
+    min-height: auto;
+    padding: 3rem 0;
+  }
+}
+
+.section-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent), var(--accent-hover));
+  border-radius: 2px;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 2rem;
+  }
+}
