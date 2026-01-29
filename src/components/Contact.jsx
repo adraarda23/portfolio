@@ -1,51 +1,116 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
-import { FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt, FaPhone } from 'react-icons/fa'
+import { useRef, useState, useEffect } from 'react'
+import { FaGithub, FaLinkedin, FaEnvelope, FaMapMarkerAlt, FaPhone, FaPaperPlane } from 'react-icons/fa'
+import { contactApi, socialLinksApi, emailApi } from '../services/api'
 import './Contact.css'
+
+// Icon mapping
+const iconMap = {
+  'FaGithub': <FaGithub />,
+  'FaLinkedin': <FaLinkedin />,
+  'FaEnvelope': <FaEnvelope />,
+}
+
+const getIcon = (iconClass) => iconMap[iconClass] || <FaEnvelope />
 
 const Contact = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [contact, setContact] = useState(null)
+  const [socialLinks, setSocialLinks] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  // Form state
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: ''
+  })
+  const [sending, setSending] = useState(false)
+  const [formMessage, setFormMessage] = useState({ type: '', text: '' })
+
+  // Fallback data
+  const fallbackContact = {
+    email: 'ardaaydinkilinc@gmail.com',
+    phone: '+90 542 117 04 72',
+    location: 'Bursa, Turkey',
+    introTitle: "Let's Connect!",
+    introText: "I'm always open to discussing new projects, creative ideas, or opportunities to be part of your vision. Whether you have a question or just want to say hi, feel free to reach out!",
+    ctaText: 'Ready to start a conversation?'
+  }
+
+  const fallbackSocialLinks = [
+    { name: 'GitHub', icon: <FaGithub />, url: 'https://github.com/adraarda23', color: '#333' },
+    { name: 'LinkedIn', icon: <FaLinkedin />, url: 'https://www.linkedin.com/in/ardaaydınkılınç/', color: '#0077b5' },
+    { name: 'Email', icon: <FaEnvelope />, url: 'mailto:ardaaydinkilinc@gmail.com', color: '#ea4335' },
+  ]
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [contactData, linksData] = await Promise.all([
+          contactApi.get(),
+          socialLinksApi.getAll()
+        ])
+        setContact(contactData)
+        setSocialLinks(linksData.map(link => ({
+          ...link,
+          icon: getIcon(link.iconClass)
+        })))
+        setLoading(false)
+      } catch (err) {
+        console.error('Failed to fetch contact data:', err)
+        setContact(fallbackContact)
+        setSocialLinks(fallbackSocialLinks)
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setSending(true)
+    setFormMessage({ type: '', text: '' })
+
+    try {
+      await emailApi.send(formData)
+      setFormMessage({ type: 'success', text: '✅ Message sent successfully! I will get back to you soon.' })
+      setFormData({ name: '', email: '', subject: '', message: '' })
+    } catch (err) {
+      setFormMessage({ type: 'error', text: '❌ Failed to send message. Please try again or email me directly.' })
+    }
+    setSending(false)
+  }
+
+  const displayContact = contact || fallbackContact
+  const displaySocialLinks = socialLinks.length > 0 ? socialLinks : fallbackSocialLinks
 
   const contactInfo = [
     {
       icon: <FaEnvelope />,
       label: 'Email',
-      value: 'ardaaydinkilinc@gmail.com',
-      link: 'mailto:ardaaydinkilinc@gmail.com',
+      value: displayContact.email,
+      link: `mailto:${displayContact.email}`,
     },
     {
       icon: <FaPhone />,
       label: 'Phone',
-      value: '+90 542 117 04 72',
-      link: 'tel:+905421170472',
+      value: displayContact.phone,
+      link: `tel:${displayContact.phone?.replace(/\s/g, '')}`,
     },
     {
       icon: <FaMapMarkerAlt />,
       label: 'Location',
-      value: 'Bursa, Turkey',
-    },
-  ]
-
-  const socialLinks = [
-    {
-      name: 'GitHub',
-      icon: <FaGithub />,
-      link: 'https://github.com/adraarda23',
-      color: '#333',
-    },
-    {
-      name: 'LinkedIn',
-      icon: <FaLinkedin />,
-      link: 'https://www.linkedin.com/in/ardaaydınkılınç/',
-      color: '#0077b5',
-    },
-    {
-      name: 'Email',
-      icon: <FaEnvelope />,
-      link: 'mailto:ardaaydinkilinc@gmail.com',
-      color: '#ea4335',
+      value: displayContact.location,
     },
   ]
 
@@ -89,74 +154,137 @@ const Contact = () => {
           animate={isInView ? 'visible' : 'hidden'}
         >
           <motion.div className="contact-intro" variants={itemVariants}>
-            <h3>Let's Connect!</h3>
-            <p>
-              I'm always open to discussing new projects, creative ideas, or opportunities
-              to be part of your vision. Whether you have a question or just want to say hi,
-              feel free to reach out!
-            </p>
+            <h3>{displayContact.introTitle}</h3>
+            <p>{displayContact.introText}</p>
           </motion.div>
 
-          <motion.div className="contact-info-grid" variants={itemVariants}>
-            {contactInfo.map((info, index) => (
-              <motion.div
-                key={index}
-                className="contact-info-card"
-                whileHover={{ y: -5 }}
-              >
-                {info.link ? (
-                  <a href={info.link} className="info-link">
-                    <span className="info-icon">{info.icon}</span>
-                    <div className="info-text">
-                      <span className="info-label">{info.label}</span>
-                      <span className="info-value">{info.value}</span>
-                    </div>
-                  </a>
-                ) : (
-                  <div className="info-content">
-                    <span className="info-icon">{info.icon}</span>
-                    <div className="info-text">
-                      <span className="info-label">{info.label}</span>
-                      <span className="info-value">{info.value}</span>
-                    </div>
+          <div className="contact-grid">
+            {/* Contact Form */}
+            <motion.div className="contact-form-section" variants={itemVariants}>
+              <h3>📬 Send me a message</h3>
+              <form onSubmit={handleSubmit} className="contact-form">
+                <div className="form-row">
+                  <div className="form-group">
+                    <label htmlFor="name">Name *</label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      placeholder="Your name"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="email">Email *</label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      placeholder="your@email.com"
+                      required
+                    />
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label htmlFor="subject">Subject</label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    placeholder="What's this about?"
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="message">Message *</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    placeholder="Your message here..."
+                    rows="5"
+                    required
+                  />
+                </div>
+
+                {formMessage.text && (
+                  <div className={`form-message ${formMessage.type}`}>
+                    {formMessage.text}
                   </div>
                 )}
-              </motion.div>
-            ))}
-          </motion.div>
 
-          <motion.div className="social-section" variants={itemVariants}>
-            <h3>Find Me On</h3>
-            <div className="social-links">
-              {socialLinks.map((social, index) => (
-                <motion.a
-                  key={index}
-                  href={social.link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="social-card"
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  whileTap={{ scale: 0.95 }}
+                <motion.button
+                  type="submit"
+                  className="btn btn-primary submit-btn"
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  disabled={sending}
                 >
-                  <span className="social-icon">{social.icon}</span>
-                  <span className="social-name">{social.name}</span>
-                </motion.a>
-              ))}
-            </div>
-          </motion.div>
+                  {sending ? (
+                    <>Sending...</>
+                  ) : (
+                    <>
+                      <FaPaperPlane />
+                      <span>Send Message</span>
+                    </>
+                  )}
+                </motion.button>
+              </form>
+            </motion.div>
 
-          <motion.div className="contact-cta" variants={itemVariants}>
-            <p>Ready to start a conversation?</p>
-            <motion.a
-              href="mailto:ardaaydinkilinc@gmail.com"
-              className="btn btn-primary btn-large"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <FaEnvelope />
-              <span>Send Me an Email</span>
-            </motion.a>
-          </motion.div>
+            {/* Contact Info */}
+            <motion.div className="contact-info-section" variants={itemVariants}>
+              <h3>📍 Contact Info</h3>
+              <div className="contact-info-list">
+                {contactInfo.map((info, index) => (
+                  <div key={index} className="contact-info-item">
+                    {info.link ? (
+                      <a href={info.link} className="info-link">
+                        <span className="info-icon">{info.icon}</span>
+                        <div className="info-text">
+                          <span className="info-label">{info.label}</span>
+                          <span className="info-value">{info.value}</span>
+                        </div>
+                      </a>
+                    ) : (
+                      <div className="info-content">
+                        <span className="info-icon">{info.icon}</span>
+                        <div className="info-text">
+                          <span className="info-label">{info.label}</span>
+                          <span className="info-value">{info.value}</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              <div className="social-section">
+                <h4>Find Me On</h4>
+                <div className="social-links">
+                  {displaySocialLinks.map((social, index) => (
+                    <motion.a
+                      key={social.id || index}
+                      href={social.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="social-link-btn"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      {social.icon}
+                    </motion.a>
+                  ))}
+                </div>
+              </div>
+            </motion.div>
+          </div>
         </motion.div>
       </div>
 

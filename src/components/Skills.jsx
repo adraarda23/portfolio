@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import {
   FaReact,
   FaAngular,
@@ -25,13 +25,45 @@ import {
   SiSpringboot,
   SiNginx,
 } from 'react-icons/si'
+import { skillCategoriesApi } from '../services/api'
 import './Skills.css'
+
+// Icon mapping for dynamic rendering
+const iconMap = {
+  'SiJavascript': <SiJavascript />,
+  'SiTypescript': <SiTypescript />,
+  'FaPython': <FaPython />,
+  'FaJava': <FaJava />,
+  'FaDatabase': <FaDatabase />,
+  'FaReact': <FaReact />,
+  'FaAngular': <FaAngular />,
+  'SiRedux': <SiRedux />,
+  'FaNode': <FaNode />,
+  'SiExpress': <SiExpress />,
+  'SiFlask': <SiFlask />,
+  'SiSpringboot': <SiSpringboot />,
+  'SiPostgresql': <SiPostgresql />,
+  'SiMongodb': <SiMongodb />,
+  'SiMysql': <SiMysql />,
+  'FaDocker': <FaDocker />,
+  'FaGitAlt': <FaGitAlt />,
+  'FaLinux': <FaLinux />,
+  'SiNginx': <SiNginx />,
+  'SiApachekafka': <SiApachekafka />,
+}
+
+const getIcon = (iconClass) => {
+  return iconMap[iconClass] || '🎯'
+}
 
 const Skills = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [skillCategories, setSkillCategories] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const skillCategories = [
+  // Fallback data
+  const fallbackCategories = [
     {
       title: 'Languages',
       icon: '💻',
@@ -87,6 +119,30 @@ const Skills = () => {
     },
   ]
 
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const data = await skillCategoriesApi.getAll()
+        // Transform API data to include icon components
+        const transformed = data.map(cat => ({
+          ...cat,
+          skills: cat.skills.map(skill => ({
+            ...skill,
+            icon: getIcon(skill.iconClass)
+          }))
+        }))
+        setSkillCategories(transformed)
+        setLoading(false)
+      } catch (err) {
+        console.error('Failed to fetch skills:', err)
+        setSkillCategories(fallbackCategories)
+        setLoading(false)
+      }
+    }
+
+    fetchSkills()
+  }, [])
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -108,6 +164,8 @@ const Skills = () => {
     },
   }
 
+  const displayCategories = skillCategories.length > 0 ? skillCategories : fallbackCategories
+
   return (
     <section id="skills" className="skills" ref={ref}>
       <div className="container">
@@ -126,9 +184,9 @@ const Skills = () => {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {skillCategories.map((category, index) => (
+          {displayCategories.map((category, index) => (
             <motion.div
-              key={index}
+              key={category.id || index}
               className="skill-category"
               variants={categoryVariants}
             >
@@ -139,7 +197,7 @@ const Skills = () => {
               <div className="skills-list">
                 {category.skills.map((skill, idx) => (
                   <motion.div
-                    key={idx}
+                    key={skill.id || idx}
                     className="skill-item"
                     initial={{ opacity: 0, x: -10 }}
                     animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -10 }}

@@ -1,13 +1,18 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { experiencesApi } from '../services/api'
 import './Experience.css'
 
 const Experience = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [experiences, setExperiences] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
 
-  const experiences = [
+  // Fallback data
+  const fallbackExperiences = [
     {
       title: 'Software Developer',
       company: 'Ithinka IT and IoT Technologies',
@@ -60,6 +65,23 @@ const Experience = () => {
     },
   ]
 
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const data = await experiencesApi.getAll()
+        setExperiences(data)
+        setLoading(false)
+      } catch (err) {
+        console.error('Failed to fetch experiences:', err)
+        setExperiences(fallbackExperiences)
+        setError(err.message)
+        setLoading(false)
+      }
+    }
+
+    fetchExperiences()
+  }, [])
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -81,6 +103,8 @@ const Experience = () => {
     },
   }
 
+  const displayExperiences = experiences.length > 0 ? experiences : fallbackExperiences
+
   return (
     <section id="experience" className="experience" ref={ref}>
       <div className="container">
@@ -99,9 +123,9 @@ const Experience = () => {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {experiences.map((exp, index) => (
+          {displayExperiences.map((exp, index) => (
             <motion.div
-              key={index}
+              key={exp.id || index}
               className="timeline-item"
               variants={itemVariants}
             >
@@ -121,7 +145,7 @@ const Experience = () => {
                 </div>
                 <p className="timeline-description">{exp.description}</p>
                 <div className="timeline-technologies">
-                  {exp.technologies.map((tech, idx) => (
+                  {(Array.isArray(exp.technologies) ? exp.technologies : []).map((tech, idx) => (
                     <span key={idx} className="tech-tag">
                       {tech}
                     </span>

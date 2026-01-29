@@ -1,8 +1,42 @@
 import { motion } from 'framer-motion'
+import { useState, useEffect } from 'react'
 import { FaGithub, FaLinkedin, FaEnvelope } from 'react-icons/fa'
+import { profileApi } from '../services/api'
 import './Hero.css'
 
 const Hero = () => {
+  const [profile, setProfile] = useState(null)
+  const [loading, setLoading] = useState(true)
+
+  // Fallback data
+  const fallbackProfile = {
+    name: 'Arda Aydın Kılınç',
+    title: 'Backend Developer',
+    subtitle: "👋 Hello, I'm",
+    description: 'Passionate software engineer specializing in backend development and scalable systems. Building robust applications with modern technologies.',
+    githubUrl: 'https://github.com/adraarda23',
+    linkedinUrl: 'https://www.linkedin.com/in/ardaaydınkılınç/',
+    email: 'ardaaydinkilinc@gmail.com'
+  }
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const data = await profileApi.get()
+        setProfile(data)
+        setLoading(false)
+      } catch (err) {
+        console.error('Failed to fetch profile:', err)
+        setProfile(fallbackProfile)
+        setLoading(false)
+      }
+    }
+
+    fetchProfile()
+  }, [])
+
+  const displayProfile = profile || fallbackProfile
+
   const container = {
     hidden: { opacity: 0 },
     show: {
@@ -44,20 +78,19 @@ const Hero = () => {
           animate="show"
         >
           <motion.div className="hero-label" variants={item}>
-            <span>👋 Hello, I'm</span>
+            <span>{displayProfile.subtitle}</span>
           </motion.div>
 
           <motion.h1 className="hero-title" variants={item}>
-            Arda Aydın Kılınç
+            {displayProfile.name}
           </motion.h1>
 
           <motion.h2 className="hero-subtitle" variants={item}>
-            Backend Developer
+            {displayProfile.title}
           </motion.h2>
 
           <motion.p className="hero-description" variants={item}>
-            Passionate software engineer specializing in backend development and scalable systems.
-            Building robust applications with modern technologies.
+            {displayProfile.description}
           </motion.p>
 
           <motion.div className="hero-buttons" variants={item}>
@@ -71,7 +104,7 @@ const Hero = () => {
               Get In Touch
             </motion.a>
             <motion.a
-              href="https://github.com/adraarda23"
+              href={displayProfile.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="btn btn-secondary"
@@ -84,7 +117,7 @@ const Hero = () => {
 
           <motion.div className="hero-social" variants={item}>
             <motion.a
-              href="https://github.com/adraarda23"
+              href={displayProfile.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="social-link"
@@ -94,7 +127,7 @@ const Hero = () => {
               <FaGithub />
             </motion.a>
             <motion.a
-              href="https://www.linkedin.com/in/ardaaydınkılınç/"
+              href={displayProfile.linkedinUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="social-link"
@@ -104,7 +137,7 @@ const Hero = () => {
               <FaLinkedin />
             </motion.a>
             <motion.a
-              href="mailto:ardaaydinkilinc@gmail.com"
+              href={`mailto:${displayProfile.email}`}
               className="social-link"
               whileHover={{ scale: 1.2, rotate: 5 }}
               whileTap={{ scale: 0.9 }}

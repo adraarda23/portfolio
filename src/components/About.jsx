@@ -1,11 +1,65 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
+import { aboutApi, statsApi } from '../services/api'
 import './About.css'
 
 const About = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [about, setAbout] = useState(null)
+  const [stats, setStats] = useState([])
+  const [loading, setLoading] = useState(true)
+
+  // Fallback data
+  const fallbackAbout = {
+    intro: "I'm a dedicated software engineer with expertise in modern web technologies and a passion for building scalable, high-performance applications. Currently advancing my proficiency in TypeScript, Redux, and Node.js while exploring emerging technologies including quantum computing.",
+    educationTitle: 'Computer Engineering',
+    educationDetail: 'Bursa Technical University (2021-2026)',
+    currentRole: 'Software Developer',
+    currentCompany: 'Ithinka IT and IoT Technologies',
+    focusTitle: 'Backend Development & Scalable Systems',
+    focusDetail: 'RESTful APIs, Database Optimization',
+    whatIDo: [
+      'Architecting responsive web applications with React and Angular',
+      'Designing and implementing scalable backend systems',
+      'Database optimization and API development',
+      'Staying current with industry best practices and emerging technologies'
+    ],
+    ctaText: "I actively seek opportunities to collaborate with fellow developers, contribute to meaningful projects, and engage in knowledge sharing within the tech community. I'm particularly interested in discussing innovative solutions, software architecture, and the future of technology."
+  }
+
+  const fallbackStats = [
+    { number: '3+', label: 'Years of Experience' },
+    { number: '10+', label: 'Technologies' },
+    { number: '5+', label: 'Projects Completed' },
+    { number: '400+', label: 'Community Members Led' }
+  ]
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [aboutData, statsData] = await Promise.all([
+          aboutApi.get(),
+          statsApi.getAll()
+        ])
+        setAbout(aboutData)
+        setStats(statsData)
+        setLoading(false)
+      } catch (err) {
+        console.error('Failed to fetch about data:', err)
+        setAbout(fallbackAbout)
+        setStats(fallbackStats)
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  const displayAbout = about || fallbackAbout
+  const displayStats = stats.length > 0 ? stats : fallbackStats
+  const whatIDo = Array.isArray(displayAbout.whatIDo) ? displayAbout.whatIDo : fallbackAbout.whatIDo
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -43,10 +97,7 @@ const About = () => {
           <div className="about-content">
             <motion.div className="about-text" variants={itemVariants}>
               <p className="about-intro">
-                I'm a dedicated software engineer with expertise in modern web technologies and
-                a passion for building scalable, high-performance applications. Currently advancing
-                my proficiency in TypeScript, Redux, and Node.js while exploring emerging technologies
-                including quantum computing.
+                {displayAbout.intro}
               </p>
 
               <div className="about-details">
@@ -54,8 +105,8 @@ const About = () => {
                   <span className="detail-icon">🎓</span>
                   <div>
                     <h3>Education</h3>
-                    <p>Computer Engineering</p>
-                    <p className="detail-sub">Bursa Technical University (2021-2026)</p>
+                    <p>{displayAbout.educationTitle}</p>
+                    <p className="detail-sub">{displayAbout.educationDetail}</p>
                   </div>
                 </div>
 
@@ -63,8 +114,8 @@ const About = () => {
                   <span className="detail-icon">💼</span>
                   <div>
                     <h3>Current Role</h3>
-                    <p>Software Developer</p>
-                    <p className="detail-sub">Ithinka IT and IoT Technologies</p>
+                    <p>{displayAbout.currentRole}</p>
+                    <p className="detail-sub">{displayAbout.currentCompany}</p>
                   </div>
                 </div>
 
@@ -72,8 +123,8 @@ const About = () => {
                   <span className="detail-icon">🚀</span>
                   <div>
                     <h3>Focus Areas</h3>
-                    <p>Backend Development & Scalable Systems</p>
-                    <p className="detail-sub">RESTful APIs, Database Optimization</p>
+                    <p>{displayAbout.focusTitle}</p>
+                    <p className="detail-sub">{displayAbout.focusDetail}</p>
                   </div>
                 </div>
               </div>
@@ -81,52 +132,27 @@ const About = () => {
               <div className="about-highlights">
                 <h3>What I Do</h3>
                 <ul>
-                  <li>
-                    <span className="highlight-icon">✨</span>
-                    Architecting responsive web applications with React and Angular
-                  </li>
-                  <li>
-                    <span className="highlight-icon">⚡</span>
-                    Designing and implementing scalable backend systems
-                  </li>
-                  <li>
-                    <span className="highlight-icon">🔧</span>
-                    Database optimization and API development
-                  </li>
-                  <li>
-                    <span className="highlight-icon">📚</span>
-                    Staying current with industry best practices and emerging technologies
-                  </li>
+                  {whatIDo.map((item, index) => (
+                    <li key={index}>
+                      <span className="highlight-icon">✨</span>
+                      {item}
+                    </li>
+                  ))}
                 </ul>
               </div>
 
               <div className="about-cta">
-                <p>
-                  I actively seek opportunities to collaborate with fellow developers, contribute
-                  to meaningful projects, and engage in knowledge sharing within the tech community.
-                  I'm particularly interested in discussing innovative solutions, software architecture,
-                  and the future of technology.
-                </p>
+                <p>{displayAbout.ctaText}</p>
               </div>
             </motion.div>
 
             <motion.div className="about-stats" variants={itemVariants}>
-              <div className="stat-card">
-                <div className="stat-number">3+</div>
-                <div className="stat-label">Years of Experience</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">10+</div>
-                <div className="stat-label">Technologies</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">5+</div>
-                <div className="stat-label">Projects Completed</div>
-              </div>
-              <div className="stat-card">
-                <div className="stat-number">400+</div>
-                <div className="stat-label">Community Members Led</div>
-              </div>
+              {displayStats.map((stat, index) => (
+                <div className="stat-card" key={stat.id || index}>
+                  <div className="stat-number">{stat.number}</div>
+                  <div className="stat-label">{stat.label}</div>
+                </div>
+              ))}
             </motion.div>
           </div>
         </motion.div>

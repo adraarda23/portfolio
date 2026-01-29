@@ -1,14 +1,18 @@
 import { motion } from 'framer-motion'
 import { useInView } from 'framer-motion'
-import { useRef } from 'react'
+import { useRef, useState, useEffect } from 'react'
 import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa'
+import { projectsApi } from '../services/api'
 import './Projects.css'
 
 const Projects = () => {
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, margin: '-100px' })
+  const [projects, setProjects] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  const projects = [
+  // Fallback data
+  const fallbackProjects = [
     {
       title: 'Medical Imaging Platform',
       description:
@@ -22,7 +26,7 @@ const Projects = () => {
       description:
         'Modern and responsive portfolio website built with React and Framer Motion. Features smooth animations, component-based architecture, and optimized performance.',
       technologies: ['React', 'Framer Motion', 'CSS3', 'JavaScript'],
-      github: 'https://github.com/adraarda23',
+      githubUrl: 'https://github.com/adraarda23',
       category: 'Frontend',
       year: '2023',
     },
@@ -31,7 +35,7 @@ const Projects = () => {
       description:
         'Multi-platform bot for Discord and Telegram that provides daily university cafeteria menus. Automated menu updates and notifications for students.',
       technologies: ['Python', 'Discord API', 'Telegram API', 'Web Scraping'],
-      github: 'https://github.com/adraarda23',
+      githubUrl: 'https://github.com/adraarda23',
       category: 'Backend',
       year: '2022',
     },
@@ -44,6 +48,22 @@ const Projects = () => {
       year: '2025',
     },
   ]
+
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await projectsApi.getAll()
+        setProjects(data)
+        setLoading(false)
+      } catch (err) {
+        console.error('Failed to fetch projects:', err)
+        setProjects(fallbackProjects)
+        setLoading(false)
+      }
+    }
+
+    fetchProjects()
+  }, [])
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -66,6 +86,8 @@ const Projects = () => {
     },
   }
 
+  const displayProjects = projects.length > 0 ? projects : fallbackProjects
+
   return (
     <section id="projects" className="projects" ref={ref}>
       <div className="container">
@@ -84,9 +106,9 @@ const Projects = () => {
           initial="hidden"
           animate={isInView ? 'visible' : 'hidden'}
         >
-          {projects.map((project, index) => (
+          {displayProjects.map((project, index) => (
             <motion.div
-              key={index}
+              key={project.id || index}
               className="project-card"
               variants={cardVariants}
               whileHover={{ y: -10 }}
@@ -100,7 +122,7 @@ const Projects = () => {
               <p className="project-description">{project.description}</p>
 
               <div className="project-technologies">
-                {project.technologies.map((tech, idx) => (
+                {(Array.isArray(project.technologies) ? project.technologies : []).map((tech, idx) => (
                   <span key={idx} className="tech-badge">
                     {tech}
                   </span>
@@ -108,9 +130,9 @@ const Projects = () => {
               </div>
 
               <div className="project-links">
-                {project.github && (
+                {(project.githubUrl || project.github) && (
                   <motion.a
-                    href={project.github}
+                    href={project.githubUrl || project.github}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="project-link"
@@ -121,9 +143,9 @@ const Projects = () => {
                     <span>Code</span>
                   </motion.a>
                 )}
-                {project.demo && (
+                {(project.demoUrl || project.demo) && (
                   <motion.a
-                    href={project.demo}
+                    href={project.demoUrl || project.demo}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="project-link"
