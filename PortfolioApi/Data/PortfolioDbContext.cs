@@ -22,12 +22,14 @@ public class PortfolioDbContext : DbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Seed default admin user (password: REDACTED)
+        // NOTE: Admin user should be created manually or via API after deployment
+        // Do NOT commit real passwords to git!
+        // Default admin: username=ardaadmin, change password immediately after first login
         modelBuilder.Entity<Admin>().HasData(new Admin
         {
             Id = 1,
             Username = "ardaadmin",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword("REDACTED")
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword("CHANGE_ME_IMMEDIATELY_" + Guid.NewGuid().ToString().Substring(0, 8))
         });
 
         // Seed default profile
