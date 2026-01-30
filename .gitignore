@@ -26,6 +26,12 @@ dist-ssr
 # .NET build output
 PortfolioApi/bin/
 PortfolioApi/obj/
+PortfolioApi/publish/
 
-# Sensitive config
+# Sensitive config - DO NOT COMMIT
 PortfolioApi/appsettings.json
+PortfolioApi/appsettings.Development.json
+.env
+.env.local
+.env.production.local
+.claude/

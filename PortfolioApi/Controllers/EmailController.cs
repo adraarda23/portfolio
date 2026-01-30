@@ -5,7 +5,7 @@ using System.Net.Mail;
 namespace PortfolioApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class EmailController : ControllerBase
 {
     private readonly IConfiguration _configuration;

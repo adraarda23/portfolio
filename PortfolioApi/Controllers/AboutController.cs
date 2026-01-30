@@ -7,7 +7,7 @@ using System.Text.Json;
 namespace PortfolioApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class AboutController : ControllerBase
 {
     private readonly PortfolioDbContext _context;
@@ -55,7 +55,7 @@ public class AboutController : ControllerBase
 }
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class StatsController : ControllerBase
 {
     private readonly PortfolioDbContext _context;

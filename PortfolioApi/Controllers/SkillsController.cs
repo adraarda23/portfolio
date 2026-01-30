@@ -6,7 +6,7 @@ using PortfolioApi.DTOs;
 namespace PortfolioApi.Controllers;
 
 [ApiController]
-[Route("api/skill-categories")]
+[Route("skill-categories")]
 public class SkillCategoriesController : ControllerBase
 {
     private readonly PortfolioDbContext _context;
@@ -73,7 +73,7 @@ public class SkillCategoriesController : ControllerBase
 }
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class SkillsController : ControllerBase
 {
     private readonly PortfolioDbContext _context;

@@ -10,7 +10,7 @@ using System.Text;
 namespace PortfolioApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class AuthController : ControllerBase
 {
     private readonly PortfolioDbContext _context;

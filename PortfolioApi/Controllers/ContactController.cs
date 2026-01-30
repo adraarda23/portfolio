@@ -6,7 +6,7 @@ using PortfolioApi.DTOs;
 namespace PortfolioApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class ContactController : ControllerBase
 {
     private readonly PortfolioDbContext _context;
@@ -47,7 +47,7 @@ public class ContactController : ControllerBase
 }
 
 [ApiController]
-[Route("api/social-links")]
+[Route("social-links")]
 public class SocialLinksController : ControllerBase
 {
     private readonly PortfolioDbContext _context;

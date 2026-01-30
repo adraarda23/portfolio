@@ -6,7 +6,7 @@ using PortfolioApi.DTOs;
 namespace PortfolioApi.Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("[controller]")]
 public class ProjectsController : ControllerBase
 {
     private readonly PortfolioDbContext _context;
