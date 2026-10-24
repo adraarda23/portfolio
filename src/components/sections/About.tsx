@@ -1,82 +1,85 @@
-import { Briefcase, GraduationCap, Sparkles, Target } from 'lucide-react'
+import { Briefcase, Coffee, GraduationCap, Target } from 'lucide-react'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { Counter } from '@/components/ui/Counter'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { SpotlightCard } from '@/components/ui/SpotlightCard'
 
+const facts = [
+  { key: 'education', icon: GraduationCap, label: 'Education', tint: 'bg-sage-100 text-sage-700', glow: 'rgba(151, 176, 142, 0.22)' },
+  { key: 'current', icon: Briefcase, label: 'Currently', tint: 'bg-clay-100 text-clay-700', glow: 'rgba(229, 148, 111, 0.2)' },
+  { key: 'focus', icon: Target, label: 'Focus', tint: 'bg-honey-100 text-honey-700', glow: 'rgba(237, 191, 89, 0.24)' },
+] as const
+
 export function About() {
   const { data } = usePortfolio()
   const { about, stats } = data
 
+  const factText = {
+    education: [about.educationTitle, about.educationDetail],
+    current: [about.currentRole, about.currentCompany],
+    focus: [about.focusTitle, about.focusDetail],
+  }
+
   return (
     <section id="about" className="section">
       <div className="container-x">
-        <SectionHeading eyebrow="About" title="Engineering with intent, shipping with care." description={about.intro} />
+        <SectionHeading eyebrow="About me" title="A little about who I am and how I work." description={about.intro} />
 
-        <div className="mt-14 grid gap-4 md:grid-cols-6">
-          <Reveal className="md:col-span-4">
-            <SpotlightCard className="h-full p-7 sm:p-9">
+        <div className="mt-12 grid gap-4 sm:mt-14 lg:grid-cols-3">
+          <Reveal className="lg:col-span-2 lg:row-span-2">
+            <div className="card h-full bg-cocoa-900 p-6 text-cream-100 sm:p-9">
               <div className="flex items-center gap-3">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent/15 text-accent-soft">
-                  <Sparkles size={18} />
+                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-clay-500 text-cream-50">
+                  <Coffee size={20} />
                 </span>
-                <h3 className="font-display text-xl font-semibold text-stone-900">What I do</h3>
+                <h3 className="font-display text-2xl font-semibold text-cream-50">What I do</h3>
               </div>
-              <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+              <ul className="mt-7 grid gap-3 sm:grid-cols-2">
                 {about.whatIDo.map((w, i) => (
-                  <li key={i} className="flex items-start gap-3 rounded-2xl border border-stone-900/5 bg-white/40 p-4 text-sm text-stone-700">
-                    <span className="mt-1 font-mono text-xs text-accent-cyan">0{i + 1}</span>
+                  <li key={i} className="flex items-start gap-3 rounded-2xl bg-cream-50/[0.06] p-4 text-[15px] leading-relaxed text-cream-200 ring-1 ring-cream-50/10">
+                    <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-honey-300 text-xs font-bold text-cocoa-900">{i + 1}</span>
                     {w}
                   </li>
                 ))}
               </ul>
-              <p className="mt-6 text-sm leading-relaxed text-stone-600">{about.ctaText}</p>
-            </SpotlightCard>
+              <p className="mt-7 text-pretty leading-relaxed text-cream-300">{about.ctaText}</p>
+            </div>
           </Reveal>
 
-          <div className="grid gap-4 md:col-span-2">
-            <Reveal delay={0.1}>
-              <SpotlightCard className="p-6" color="rgba(227, 179, 44, 0.2)">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent-cyan/15 text-accent-cyan">
-                  <GraduationCap size={18} />
-                </span>
-                <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-stone-500">Education</p>
-                <h4 className="mt-1 font-display text-lg font-semibold text-stone-900">{about.educationTitle}</h4>
-                <p className="mt-1 text-sm text-stone-600">{about.educationDetail}</p>
-              </SpotlightCard>
-            </Reveal>
-            <Reveal delay={0.18}>
-              <SpotlightCard className="p-6" color="rgba(226, 103, 63, 0.18)">
-                <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent-pink/15 text-accent-pink">
-                  <Briefcase size={18} />
-                </span>
-                <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-stone-500">Currently</p>
-                <h4 className="mt-1 font-display text-lg font-semibold text-stone-900">{about.currentRole}</h4>
-                <p className="mt-1 text-sm text-stone-600">{about.currentCompany}</p>
-              </SpotlightCard>
-            </Reveal>
-          </div>
+          {facts.map((f, i) => {
+            const [title, detail] = factText[f.key]
+            return (
+              <Reveal key={f.key} delay={0.08 * (i + 1)} className={f.key === 'focus' ? 'sm:col-span-2 lg:col-span-1' : ''}>
+                <SpotlightCard className="h-full p-6" color={f.glow}>
+                  <div className="flex items-start gap-4">
+                    <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${f.tint}`}>
+                      <f.icon size={19} />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold uppercase tracking-wider text-cocoa-500">{f.label}</p>
+                      <h4 className="mt-1 font-display text-lg font-semibold leading-snug text-cocoa-900">{title}</h4>
+                      <p className="mt-1 text-sm text-cocoa-600">{detail}</p>
+                    </div>
+                  </div>
+                </SpotlightCard>
+              </Reveal>
+            )
+          })}
 
-          <Reveal delay={0.1} className="md:col-span-2">
-            <SpotlightCard className="h-full p-6" color="rgba(244, 197, 74, 0.22)">
-              <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent-amber/15 text-accent-amber">
-                <Target size={18} />
-              </span>
-              <p className="mt-5 font-mono text-[10px] uppercase tracking-widest text-stone-500">Focus</p>
-              <h4 className="mt-1 font-display text-lg font-semibold text-stone-900">{about.focusTitle}</h4>
-              <p className="mt-1 text-sm text-stone-600">{about.focusDetail}</p>
-            </SpotlightCard>
-          </Reveal>
-
-          <Reveal delay={0.16} className="md:col-span-4">
-            <div className="card grid h-full grid-cols-2 divide-stone-900/5 sm:grid-cols-4 sm:divide-x">
+          <Reveal delay={0.16} className="lg:col-span-2">
+            <div className="card grid h-full grid-cols-2 sm:grid-cols-4">
               {stats.map((s, i) => (
-                <div key={s.id} className={`p-6 ${i > 1 ? 'border-t border-stone-900/5 sm:border-t-0' : ''}`}>
-                  <p className="font-display text-3xl font-bold text-stone-900 sm:text-4xl">
+                <div
+                  key={s.id}
+                  className={`p-5 text-center sm:p-6 ${i % 2 === 1 ? 'border-l border-cocoa-900/[0.06]' : ''} ${
+                    i > 1 ? 'border-t border-cocoa-900/[0.06] sm:border-t-0' : ''
+                  } ${i === 2 ? 'sm:border-l' : ''}`}
+                >
+                  <p className="font-display text-3xl font-semibold text-clay-600 sm:text-4xl">
                     <Counter value={s.number} />
                   </p>
-                  <p className="mt-1 text-xs leading-snug text-stone-600 sm:text-sm">{s.label}</p>
+                  <p className="mt-1 text-xs leading-snug text-cocoa-600 sm:text-sm">{s.label}</p>
                 </div>
               ))}
             </div>

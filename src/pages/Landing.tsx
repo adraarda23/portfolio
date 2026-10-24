@@ -11,7 +11,7 @@ import { Skills } from '@/components/sections/Skills'
 
 export default function Landing() {
   return (
-    <div className="noise relative">
+    <div className="grain relative">
       <Background />
       <ScrollProgress />
       <Navbar />

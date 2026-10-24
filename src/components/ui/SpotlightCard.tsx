@@ -8,7 +8,8 @@ interface Props {
   color?: string
 }
 
-export function SpotlightCard({ children, className, color = 'rgba(239, 125, 34, 0.16)' }: Props) {
+/** Card with a soft warm glow that follows the cursor on hover. */
+export function SpotlightCard({ children, className, color = 'rgba(229, 148, 111, 0.16)' }: Props) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 
@@ -18,10 +19,10 @@ export function SpotlightCard({ children, className, color = 'rgba(239, 125, 34,
     mouseY.set(clientY - top)
   }
 
-  const background = useMotionTemplate`radial-gradient(420px circle at ${mouseX}px ${mouseY}px, ${color}, transparent 70%)`
+  const background = useMotionTemplate`radial-gradient(380px circle at ${mouseX}px ${mouseY}px, ${color}, transparent 70%)`
 
   return (
-    <div onMouseMove={onMouseMove} className={cn('card group', className)}>
+    <div onMouseMove={onMouseMove} className={cn('card card-hover group', className)}>
       <motion.div
         className="pointer-events-none absolute -inset-px opacity-0 transition-opacity duration-500 group-hover:opacity-100"
         style={{ background }}

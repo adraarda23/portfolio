@@ -6,13 +6,14 @@ import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 import { SpotlightCard } from '@/components/ui/SpotlightCard'
 
-const typeStyles: Record<string, string> = {
-  internship: 'border-accent-cyan/30 bg-accent-cyan/10 text-accent-cyan',
-  scholarship: 'border-accent-amber/30 bg-accent-amber/10 text-accent-amber',
-  leadership: 'border-accent-pink/30 bg-accent-pink/10 text-accent-pink',
-  'full-time': 'border-accent/30 bg-accent/10 text-accent-soft',
-  freelance: 'border-accent/30 bg-accent/10 text-accent-soft',
+const typeStyles: Record<string, { badge: string; dot: string }> = {
+  internship: { badge: 'bg-sage-100 text-sage-800', dot: 'bg-sage-500' },
+  scholarship: { badge: 'bg-honey-100 text-honey-700', dot: 'bg-honey-400' },
+  leadership: { badge: 'bg-clay-100 text-clay-700', dot: 'bg-clay-500' },
+  'full-time': { badge: 'bg-clay-100 text-clay-700', dot: 'bg-clay-600' },
+  freelance: { badge: 'bg-cream-300 text-cocoa-800', dot: 'bg-cocoa-500' },
 }
+const fallbackStyle = { badge: 'bg-cream-300 text-cocoa-800', dot: 'bg-cocoa-500' }
 
 export function Experience() {
   const { data } = usePortfolio()
@@ -40,51 +41,51 @@ export function Experience() {
       <div className="container-x">
         <SectionHeading
           eyebrow="Experience"
-          title="Where I've been building."
-          description="Internships, research and community roles that shaped how I design and ship software."
+          title="The places that shaped me."
+          description="Internships, research and community roles where I learned to design, build and ship software with others."
         />
 
-        <div ref={ref} className="relative mt-16">
-          <div className="absolute left-4 top-7 w-px bg-stone-900/10 md:left-1/2 md:-translate-x-1/2" style={{ height: lineHeight }} />
+        <div ref={ref} className="relative mt-12 sm:mt-16">
+          <div className="absolute left-[11px] top-8 w-0.5 rounded-full bg-cream-300 md:left-1/2 md:-translate-x-1/2" style={{ height: lineHeight }} />
           <motion.div
             style={{ scaleY, height: lineHeight }}
-            className="absolute left-4 top-7 w-px origin-top bg-gradient-to-b from-accent via-accent-cyan to-accent-pink md:left-1/2 md:-translate-x-1/2"
+            className="absolute left-[11px] top-8 w-0.5 origin-top rounded-full bg-gradient-to-b from-clay-500 via-honey-400 to-sage-500 md:left-1/2 md:-translate-x-1/2"
           />
 
-          <ol ref={listRef} className="space-y-10">
+          <ol ref={listRef} className="space-y-6 sm:space-y-8">
             {data.experiences.map((exp, i) => {
               const left = i % 2 === 0
-              const style = typeStyles[exp.type.toLowerCase()] ?? 'border-stone-900/15 bg-stone-900/5 text-stone-700'
+              const style = typeStyles[exp.type.toLowerCase()] ?? fallbackStyle
               return (
-                <li key={exp.id} className="relative md:grid md:grid-cols-2 md:gap-12">
-                  <span className="absolute left-4 top-7 z-10 -translate-x-1/2 md:left-1/2">
-                    <span className="block h-3 w-3 rounded-full border-2 border-ink-950 bg-accent shadow-glow" />
+                <li key={exp.id} className="relative md:grid md:grid-cols-2 md:gap-14">
+                  <span className="absolute left-[12px] top-8 z-10 -translate-x-1/2 -translate-y-1/2 md:left-1/2">
+                    <span className={`block h-4 w-4 rounded-full ring-4 ring-cream-100 ${style.dot}`} />
                   </span>
-                  <Reveal className={`pl-12 md:pl-0 ${left ? 'md:col-start-1 md:pr-6' : 'md:col-start-2 md:pl-6'}`} delay={0.05}>
-                    <SpotlightCard className="p-6 sm:p-7">
-                      <div className="flex flex-wrap items-start justify-between gap-3">
-                        <div>
-                          <h3 className="font-display text-lg font-semibold text-stone-900 sm:text-xl">{exp.title}</h3>
-                          <p className="mt-0.5 text-sm font-medium text-accent-soft">{exp.company}</p>
-                        </div>
-                        <span className={`rounded-full border px-3 py-1 text-xs font-medium ${style}`}>{exp.type}</span>
-                      </div>
-                      <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-xs text-stone-500">
-                        <span className="inline-flex items-center gap-1.5">
+                  <Reveal className={`pl-9 md:pl-0 ${left ? 'md:col-start-1' : 'md:col-start-2'}`} delay={0.05}>
+                    <SpotlightCard className="p-5 sm:p-7">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className={`rounded-full px-3 py-1 text-xs font-semibold ${style.badge}`}>{exp.type}</span>
+                        <span className="inline-flex items-center gap-1.5 text-xs font-medium text-cocoa-500">
                           <Calendar size={12} /> {exp.period}
                         </span>
-                        {exp.duration && (
-                          <span className="inline-flex items-center gap-1.5">
-                            <Clock size={12} /> {exp.duration}
-                          </span>
-                        )}
-                        {exp.location && (
-                          <span className="inline-flex items-center gap-1.5">
-                            <MapPin size={12} /> {exp.location}
-                          </span>
-                        )}
                       </div>
-                      <p className="mt-4 text-sm leading-relaxed text-stone-600">{exp.description}</p>
+                      <h3 className="mt-4 font-display text-xl font-semibold leading-snug text-cocoa-900">{exp.title}</h3>
+                      <p className="mt-0.5 text-sm font-semibold text-clay-600">{exp.company}</p>
+                      {(exp.duration || exp.location) && (
+                        <div className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-cocoa-500">
+                          {exp.duration && (
+                            <span className="inline-flex items-center gap-1.5">
+                              <Clock size={12} /> {exp.duration}
+                            </span>
+                          )}
+                          {exp.location && (
+                            <span className="inline-flex items-center gap-1.5">
+                              <MapPin size={12} /> {exp.location}
+                            </span>
+                          )}
+                        </div>
+                      )}
+                      <p className="mt-4 text-pretty text-[15px] leading-relaxed text-cocoa-600">{exp.description}</p>
                       <div className="mt-5 flex flex-wrap gap-2">
                         {exp.technologies.map((t) => (
                           <span key={t} className="tag">

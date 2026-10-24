@@ -1,8 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { ArrowRight, Menu, X } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { usePortfolio } from '@/context/PortfolioContext'
-import { initials } from '@/lib/utils'
+import { Logo } from '@/components/ui/Logo'
 
 export const NAV_SECTIONS = [
   { id: 'home', label: 'Home' },
@@ -49,6 +49,13 @@ export function Navbar() {
     }
   }, [open])
 
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 768px)')
+    const close = () => mq.matches && setOpen(false)
+    mq.addEventListener('change', close)
+    return () => mq.removeEventListener('change', close)
+  }, [])
+
   const go = (id: string) => {
     setOpen(false)
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' })
@@ -60,40 +67,34 @@ export function Navbar() {
         initial={{ y: -40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
-        className="fixed inset-x-0 top-0 z-50 flex justify-center px-4 pt-4"
+        className="fixed inset-x-0 top-0 z-50 flex justify-center px-3 pt-3 sm:px-4 sm:pt-4"
       >
         <nav
-          className={`flex w-full max-w-5xl items-center justify-between rounded-full px-3 py-2 transition-all duration-500 ${
-            scrolled ? 'glass shadow-card' : 'border border-transparent'
+          className={`flex w-full max-w-5xl items-center justify-between rounded-full py-2 pl-2 pr-2 transition-all duration-500 sm:pl-3 ${
+            scrolled || open ? 'glass shadow-soft' : 'border border-transparent'
           }`}
         >
-          <button
-            onClick={() => go('home')}
-            className="flex items-center gap-3 rounded-full px-2 py-1 text-left"
-            aria-label="Back to top"
-          >
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-accent to-accent-cyan font-display text-sm font-bold text-ink-950 shadow-glow">
-              {initials(data.profile.name) || 'A'}
-            </span>
-            <span className="hidden font-display text-sm font-semibold text-stone-900 sm:block">
-              {data.profile.name.split(' ')[0]}
-              <span className="text-stone-500">.dev</span>
+          <button onClick={() => go('home')} className="flex items-center gap-2.5 rounded-full py-1 pl-1 pr-3 text-left" aria-label="Back to top">
+            <Logo className="h-9 w-9" />
+            <span className="font-display text-lg font-semibold text-cocoa-900">
+              {data.profile.name.split(' ')[0].toLowerCase()}
+              <span className="text-clay-600">.</span>
             </span>
           </button>
 
-          <ul className="hidden items-center gap-1 md:flex">
-            {NAV_SECTIONS.map((s) => (
+          <ul className="hidden items-center gap-0.5 md:flex">
+            {NAV_SECTIONS.slice(1).map((s) => (
               <li key={s.id}>
                 <button
                   onClick={() => go(s.id)}
-                  className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                    active === s.id ? 'text-stone-900' : 'text-stone-600 hover:text-stone-900'
+                  className={`relative rounded-full px-3.5 py-2 text-sm font-medium transition-colors lg:px-4 ${
+                    active === s.id ? 'text-clay-700' : 'text-cocoa-600 hover:text-cocoa-900'
                   }`}
                 >
                   {active === s.id && (
                     <motion.span
                       layoutId="nav-pill"
-                      className="absolute inset-0 rounded-full bg-stone-900/10"
+                      className="absolute inset-0 rounded-full bg-clay-50 ring-1 ring-clay-100"
                       transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -104,16 +105,17 @@ export function Navbar() {
           </ul>
 
           <div className="flex items-center gap-2">
-            <button onClick={() => go('contact')} className="btn-primary hidden !px-5 !py-2 text-xs md:inline-flex">
-              Let's talk
+            <button onClick={() => go('contact')} className="btn-primary hidden !px-5 !py-2.5 md:inline-flex">
+              Say hello
+              <ArrowRight size={15} />
             </button>
             <button
               onClick={() => setOpen((v) => !v)}
-              className="grid h-10 w-10 place-items-center rounded-full text-stone-900 md:hidden"
+              className="grid h-10 w-10 place-items-center rounded-full bg-cocoa-900 text-cream-50 md:hidden"
               aria-label="Toggle menu"
               aria-expanded={open}
             >
-              {open ? <X size={20} /> : <Menu size={20} />}
+              {open ? <X size={18} /> : <Menu size={18} />}
             </button>
           </div>
         </nav>
@@ -125,30 +127,26 @@ export function Navbar() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-40 bg-ink-950/90 backdrop-blur-xl md:hidden"
+            className="fixed inset-0 z-40 bg-cream-100/95 backdrop-blur-xl md:hidden"
             onClick={() => setOpen(false)}
           >
             <motion.ul
-              initial={{ y: 30, opacity: 0 }}
+              initial={{ y: 24, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 20, opacity: 0 }}
+              exit={{ y: 16, opacity: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="flex h-full flex-col items-center justify-center gap-2"
+              className="flex h-full flex-col justify-center gap-1 px-8"
               onClick={(e) => e.stopPropagation()}
             >
               {NAV_SECTIONS.map((s, i) => (
-                <motion.li
-                  key={s.id}
-                  initial={{ opacity: 0, y: 12 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.05 * i }}
-                >
+                <motion.li key={s.id} initial={{ opacity: 0, x: -12 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: 0.04 * i }}>
                   <button
                     onClick={() => go(s.id)}
-                    className={`font-display text-3xl font-semibold ${
-                      active === s.id ? 'gradient-text' : 'text-stone-700'
+                    className={`flex w-full items-baseline gap-4 border-b border-cocoa-900/[0.06] py-3 text-left font-display text-3xl font-semibold ${
+                      active === s.id ? 'text-clay-600' : 'text-cocoa-800'
                     }`}
                   >
+                    <span className="font-mono text-xs font-medium text-cocoa-400">0{i + 1}</span>
                     {s.label}
                   </button>
                 </motion.li>
