@@ -35,3 +35,5 @@ PortfolioApi/appsettings.Development.json
 .env.local
 .env.production.local
 .claude/
+# TypeScript incremental build info
+*.tsbuildinfo

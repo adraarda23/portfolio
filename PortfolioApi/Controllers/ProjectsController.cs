@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Data;
@@ -38,6 +39,7 @@ public class ProjectsController : ControllerBase
         );
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ProjectDto>> Create(CreateProjectDto dto)
     {
@@ -62,6 +64,7 @@ public class ProjectsController : ControllerBase
         ));
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateProjectDto dto)
     {
@@ -81,6 +84,7 @@ public class ProjectsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Data;
@@ -30,6 +31,7 @@ public class SkillCategoriesController : ControllerBase
         )).ToList();
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<SkillCategoryDto>> Create(CreateSkillCategoryDto dto)
     {
@@ -46,6 +48,7 @@ public class SkillCategoriesController : ControllerBase
         return CreatedAtAction(nameof(GetAll), new SkillCategoryDto(category.Id, category.Title, category.Icon, category.DisplayOrder, new List<SkillDto>()));
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateSkillCategoryDto dto)
     {
@@ -60,6 +63,7 @@ public class SkillCategoriesController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
@@ -90,6 +94,7 @@ public class SkillsController : ControllerBase
         return skills.Select(s => new SkillDto(s.Id, s.Name, s.IconClass, s.Level, s.DisplayOrder, s.SkillCategoryId)).ToList();
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<SkillDto>> Create(CreateSkillDto dto)
     {
@@ -108,6 +113,7 @@ public class SkillsController : ControllerBase
         return CreatedAtAction(nameof(GetAll), new SkillDto(skill.Id, skill.Name, skill.IconClass, skill.Level, skill.DisplayOrder, skill.SkillCategoryId));
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, [FromBody] UpdateSkillDto dto)
     {
@@ -125,6 +131,7 @@ public class SkillsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
