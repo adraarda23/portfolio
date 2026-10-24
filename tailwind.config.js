@@ -5,18 +5,18 @@ export default {
     extend: {
       colors: {
         ink: {
-          950: '#06070b',
-          900: '#0a0b10',
-          800: '#10121a',
-          700: '#171a25',
-          600: '#1f2333',
+          950: '#fdf8f0',
+          900: '#f8efe2',
+          800: '#f1e4d1',
+          700: '#e8d7bf',
+          600: '#d8c3a5',
         },
         accent: {
-          DEFAULT: '#8b5cf6',
-          soft: '#a78bfa',
-          cyan: '#22d3ee',
-          pink: '#f472b6',
-          amber: '#fbbf24',
+          DEFAULT: '#ef7d22',
+          soft: '#f59e3b',
+          cyan: '#e3b32c',
+          pink: '#e2673f',
+          amber: '#f4c54a',
         },
       },
       fontFamily: {
@@ -25,13 +25,13 @@ export default {
         mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'monospace'],
       },
       boxShadow: {
-        glow: '0 0 40px -10px rgba(139, 92, 246, 0.55)',
-        'glow-cyan': '0 0 40px -10px rgba(34, 211, 238, 0.5)',
-        card: '0 1px 0 0 rgba(255,255,255,0.04) inset, 0 20px 50px -30px rgba(0,0,0,0.8)',
+        glow: '0 0 40px -10px rgba(239, 125, 34, 0.55)',
+        'glow-cyan': '0 0 40px -10px rgba(227, 179, 44, 0.5)',
+        card: '0 1px 0 0 rgba(255,255,255,0.7) inset, 0 20px 50px -30px rgba(120, 70, 20, 0.35)',
       },
       backgroundImage: {
         'grid-dots':
-          'radial-gradient(circle at 1px 1px, rgba(255,255,255,0.08) 1px, transparent 0)',
+          'radial-gradient(circle at 1px 1px, rgba(120,70,20,0.12) 1px, transparent 0)',
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
       },
       keyframes: {

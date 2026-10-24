@@ -1,5 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
-import { CheckCircle2, Loader2, Mail, MapPin, Phone, Send, XCircle } from 'lucide-react'
+import { Check, CheckCircle2, Copy, Loader2, Mail, MapPin, Phone, Send, XCircle } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { api, ApiError } from '@/lib/api'
@@ -15,6 +15,16 @@ export function Contact() {
   const { contact, socialLinks } = data
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
   const [status, setStatus] = useState<Status>({ kind: 'idle' })
+  const [copied, setCopied] = useState(false)
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(contact.email)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {
+      /* clipboard unavailable */
+    }
+  }
 
   const update = (k: keyof typeof form) => (e: { target: { value: string } }) => setForm((f) => ({ ...f, [k]: e.target.value }))
 
@@ -48,13 +58,24 @@ export function Contact() {
             {info.map((item, i) => (
               <Reveal key={item.label} delay={0.05 * i}>
                 <SpotlightCard className="p-5">
-                  <a href={item.href} className="flex items-center gap-4">
+                  {item.label === 'Email' && (
+                    <button
+                      type="button"
+                      onClick={copyEmail}
+                      aria-label="Copy email address"
+                      className="absolute right-4 top-1/2 z-10 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-full border border-stone-900/10 px-3 py-1.5 text-xs text-stone-700 transition hover:border-stone-900/30 hover:text-stone-900"
+                    >
+                      {copied ? <Check size={12} className="text-accent-soft" /> : <Copy size={12} />}
+                      {copied ? 'Copied' : 'Copy'}
+                    </button>
+                  )}
+                  <a href={item.href} className="flex items-center gap-4 pr-20">
                     <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-accent/15 text-accent-soft">
                       <item.icon size={18} />
                     </span>
                     <div className="min-w-0">
-                      <p className="font-mono text-[10px] uppercase tracking-widest text-slate-500">{item.label}</p>
-                      <p className="truncate text-sm font-medium text-white">{item.value}</p>
+                      <p className="font-mono text-[10px] uppercase tracking-widest text-stone-500">{item.label}</p>
+                      <p className="truncate text-sm font-medium text-stone-900">{item.value}</p>
                     </div>
                   </a>
                 </SpotlightCard>
@@ -62,7 +83,7 @@ export function Contact() {
             ))}
             <Reveal delay={0.2}>
               <div className="card p-5">
-                <p className="text-sm text-slate-400">{contact.ctaText}</p>
+                <p className="text-sm text-stone-600">{contact.ctaText}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {socialLinks.map((s) => (
                     <a
@@ -70,7 +91,7 @@ export function Contact() {
                       href={s.url}
                       target={s.url.startsWith('mailto:') ? undefined : '_blank'}
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2 text-sm text-slate-300 transition hover:border-white/30 hover:text-white"
+                      className="inline-flex items-center gap-2 rounded-full border border-stone-900/10 px-4 py-2 text-sm text-stone-700 transition hover:border-stone-900/30 hover:text-stone-900"
                     >
                       <Icon name={s.iconClass} size={14} />
                       {s.name}

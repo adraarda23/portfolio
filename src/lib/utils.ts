@@ -17,3 +17,6 @@ export const initials = (name: string) =>
     .slice(0, 3)
     .map((w) => w[0]?.toUpperCase())
     .join('')
+
+/** `level` on a skill stores years of active use; values above 30 are legacy percentages and are hidden. */
+export const yearsLabel = (years: number) => (years > 0 && years <= 30 ? `${years} ${years === 1 ? 'yr' : 'yrs'}` : null)

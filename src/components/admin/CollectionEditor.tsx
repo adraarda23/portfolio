@@ -113,19 +113,19 @@ export function CollectionEditor<T extends Ordered>({ title, description, items,
               className="card flex items-center gap-3 p-4 sm:p-5"
             >
               <div className="flex flex-col">
-                <button aria-label="Move up" disabled={i === 0} onClick={() => move(i, -1)} className="rounded-md p-1 text-slate-500 hover:text-white disabled:opacity-20">
+                <button aria-label="Move up" disabled={i === 0} onClick={() => move(i, -1)} className="rounded-md p-1 text-stone-500 hover:text-stone-900 disabled:opacity-20">
                   <ArrowUp size={14} />
                 </button>
-                <button aria-label="Move down" disabled={i === items.length - 1} onClick={() => move(i, 1)} className="rounded-md p-1 text-slate-500 hover:text-white disabled:opacity-20">
+                <button aria-label="Move down" disabled={i === items.length - 1} onClick={() => move(i, 1)} className="rounded-md p-1 text-stone-500 hover:text-stone-900 disabled:opacity-20">
                   <ArrowDown size={14} />
                 </button>
               </div>
               <div className="min-w-0 flex-1">{render(item)}</div>
               <div className="flex shrink-0 gap-1">
-                <button aria-label="Edit" onClick={() => open(item)} className="grid h-9 w-9 place-items-center rounded-xl text-slate-400 transition hover:bg-white/10 hover:text-white">
+                <button aria-label="Edit" onClick={() => open(item)} className="grid h-9 w-9 place-items-center rounded-xl text-stone-600 transition hover:bg-stone-900/10 hover:text-stone-900">
                   <Pencil size={15} />
                 </button>
-                <button aria-label="Delete" onClick={() => setConfirm(item)} className="grid h-9 w-9 place-items-center rounded-xl text-slate-400 transition hover:bg-rose-500/20 hover:text-rose-300">
+                <button aria-label="Delete" onClick={() => setConfirm(item)} className="grid h-9 w-9 place-items-center rounded-xl text-stone-600 transition hover:bg-rose-500/20 hover:text-rose-300">
                   <Trash2 size={15} />
                 </button>
               </div>
@@ -133,7 +133,7 @@ export function CollectionEditor<T extends Ordered>({ title, description, items,
           ))}
         </AnimatePresence>
         {items.length === 0 && (
-          <li className="card p-10 text-center text-sm text-slate-500">Nothing here yet. Add your first {singular}.</li>
+          <li className="card p-10 text-center text-sm text-stone-500">Nothing here yet. Add your first {singular}.</li>
         )}
       </ul>
 

@@ -38,8 +38,8 @@ export function Login({ onSuccess }: { onSuccess: () => void }) {
         <span className="grid h-12 w-12 place-items-center rounded-2xl bg-accent/15 text-accent-soft">
           <Lock size={20} />
         </span>
-        <h1 className="mt-5 font-display text-2xl font-semibold text-white">Admin sign in</h1>
-        <p className="mt-1 text-sm text-slate-400">Manage your portfolio content.</p>
+        <h1 className="mt-5 font-display text-2xl font-semibold text-stone-900">Admin sign in</h1>
+        <p className="mt-1 text-sm text-stone-600">Manage your portfolio content.</p>
 
         <div className="mt-6 space-y-4">
           <div>
@@ -58,7 +58,7 @@ export function Login({ onSuccess }: { onSuccess: () => void }) {
           {busy && <Loader2 size={16} className="animate-spin" />}
           {busy ? 'Signing in…' : 'Sign in'}
         </button>
-        <Link to="/" className="mt-4 block text-center text-xs text-slate-500 hover:text-white">
+        <Link to="/" className="mt-4 block text-center text-xs text-stone-500 hover:text-stone-900">
           ← Back to site
         </Link>
       </motion.form>

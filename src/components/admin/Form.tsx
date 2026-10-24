@@ -79,7 +79,7 @@ export function Fields<T extends object>({ fields, values, onChange }: FieldsPro
               </select>
             ) : f.type === 'icon' ? (
               <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-white/10 bg-ink-800 text-xl text-accent-soft">
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-stone-900/10 bg-ink-800 text-xl text-accent-soft">
                   <Icon name={String(value)} />
                 </span>
                 <select {...common} value={value} onChange={(e) => onChange(f.key, e.target.value)}>
@@ -98,7 +98,7 @@ export function Fields<T extends object>({ fields, values, onChange }: FieldsPro
                 onChange={(e) => onChange(f.key, f.type === 'number' ? e.target.valueAsNumber : e.target.value)}
               />
             )}
-            {f.hint && <p className="mt-1.5 text-xs text-slate-500">{f.hint}</p>}
+            {f.hint && <p className="mt-1.5 text-xs text-stone-500">{f.hint}</p>}
           </div>
         )
       })}

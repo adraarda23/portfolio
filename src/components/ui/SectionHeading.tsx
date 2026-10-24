@@ -22,7 +22,7 @@ export function SectionHeading({ eyebrow, title, description, align = 'left' }: 
       </Reveal>
       {description && (
         <Reveal delay={0.16}>
-          <p className="mt-4 text-base leading-relaxed text-slate-400 sm:text-lg">{description}</p>
+          <p className="mt-4 text-base leading-relaxed text-stone-600 sm:text-lg">{description}</p>
         </Reveal>
       )}
     </div>

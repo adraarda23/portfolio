@@ -44,12 +44,12 @@ export default function Admin() {
   const sidebar = (
     <>
       <div className="flex items-center gap-3 px-2">
-        <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-accent to-accent-cyan font-display text-sm font-bold text-white">
+        <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-accent to-accent-cyan font-display text-sm font-bold text-stone-900">
           {initials(data.profile.name)}
         </span>
         <div className="min-w-0">
-          <p className="truncate text-sm font-semibold text-white">{data.profile.name}</p>
-          <p className="truncate text-xs text-slate-500">{auth.getUsername() ?? 'admin'}</p>
+          <p className="truncate text-sm font-semibold text-stone-900">{data.profile.name}</p>
+          <p className="truncate text-xs text-stone-500">{auth.getUsername() ?? 'admin'}</p>
         </div>
       </div>
       <nav className="mt-8 flex-1 space-y-1">
@@ -60,7 +60,7 @@ export default function Admin() {
             className={({ isActive }) =>
               cn(
                 'flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm font-medium transition',
-                isActive ? 'bg-white/10 text-white' : 'text-slate-400 hover:bg-white/5 hover:text-white',
+                isActive ? 'bg-stone-900/10 text-stone-900' : 'text-stone-600 hover:bg-stone-900/5 hover:text-stone-900',
               )
             }
           >
@@ -69,11 +69,11 @@ export default function Admin() {
           </NavLink>
         ))}
       </nav>
-      <div className="space-y-1 border-t border-white/5 pt-4">
-        <Link to="/" className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm text-slate-400 transition hover:bg-white/5 hover:text-white">
+      <div className="space-y-1 border-t border-stone-900/5 pt-4">
+        <Link to="/" className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-sm text-stone-600 transition hover:bg-stone-900/5 hover:text-stone-900">
           <ExternalLink size={16} /> View site
         </Link>
-        <button onClick={logout} className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm text-slate-400 transition hover:bg-rose-500/10 hover:text-rose-300">
+        <button onClick={logout} className="flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-sm text-stone-600 transition hover:bg-rose-500/10 hover:text-rose-300">
           <LogOut size={16} /> Sign out
         </button>
       </div>
@@ -82,12 +82,12 @@ export default function Admin() {
 
   return (
     <ToastProvider>
-      <div className="min-h-screen bg-ink-950 text-slate-200 lg:grid lg:grid-cols-[260px_1fr]">
-        <aside className="sticky top-0 hidden h-screen flex-col border-r border-white/5 bg-ink-900/60 p-5 lg:flex">{sidebar}</aside>
+      <div className="min-h-screen bg-ink-950 text-stone-800 lg:grid lg:grid-cols-[260px_1fr]">
+        <aside className="sticky top-0 hidden h-screen flex-col border-r border-stone-900/5 bg-ink-900/60 p-5 lg:flex">{sidebar}</aside>
 
         <header className="glass sticky top-0 z-40 flex items-center justify-between rounded-none border-x-0 border-t-0 px-4 py-3 lg:hidden">
-          <span className="font-display font-semibold text-white">Admin</span>
-          <button aria-label="Menu" onClick={() => setMenuOpen((o) => !o)} className="grid h-10 w-10 place-items-center rounded-xl text-white">
+          <span className="font-display font-semibold text-stone-900">Admin</span>
+          <button aria-label="Menu" onClick={() => setMenuOpen((o) => !o)} className="grid h-10 w-10 place-items-center rounded-xl text-stone-900">
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
         </header>
@@ -98,7 +98,7 @@ export default function Admin() {
               animate={{ x: 0 }}
               exit={{ x: -280 }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-white/5 bg-ink-900 p-5 lg:hidden"
+              className="fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-stone-900/5 bg-ink-900 p-5 lg:hidden"
             >
               {sidebar}
             </motion.aside>

@@ -7,7 +7,7 @@ const Admin = lazy(() => import('@/pages/Admin'))
 
 function AdminFallback() {
   return (
-    <div className="grid min-h-screen place-items-center bg-ink-950 text-slate-400">
+    <div className="grid min-h-screen place-items-center bg-ink-950 text-stone-600">
       <div className="flex items-center gap-3 font-mono text-sm">
         <span className="h-2 w-2 animate-pulse rounded-full bg-accent-cyan" />
         loading admin…

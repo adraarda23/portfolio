@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    color-scheme: dark;
+    color-scheme: light;
     --nav-height: 72px;
   }
 
@@ -14,12 +14,12 @@
   }
 
   body {
-    @apply bg-ink-950 text-slate-200 font-sans antialiased;
+    @apply bg-ink-950 text-stone-800 font-sans antialiased;
     overflow-x: hidden;
   }
 
   ::selection {
-    @apply bg-accent/40 text-white;
+    @apply bg-accent/30 text-stone-900;
   }
 
   ::-webkit-scrollbar {
@@ -30,7 +30,7 @@
   }
   ::-webkit-scrollbar-thumb {
     @apply bg-ink-600 rounded-full;
-    border: 2px solid #06070b;
+    border: 2px solid #fdf8f0;
   }
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-accent/70;
@@ -60,47 +60,47 @@
   }
 
   .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-accent-soft;
+    @apply inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 font-mono text-[11px] uppercase tracking-[0.2em] text-accent;
   }
 
   .heading {
-    @apply font-display text-3xl font-semibold tracking-tight text-white sm:text-4xl md:text-5xl;
+    @apply font-display text-3xl font-semibold tracking-tight text-stone-900 sm:text-4xl md:text-5xl;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-accent-soft via-accent-cyan to-accent-pink bg-clip-text text-transparent;
+    @apply text-accent;
   }
 
   .glass {
-    @apply border border-white/10 bg-white/[0.03] backdrop-blur-xl;
+    @apply border border-stone-900/10 bg-white/60 backdrop-blur-xl;
   }
 
   .card {
-    @apply glass relative overflow-hidden rounded-3xl shadow-card transition-colors duration-300 hover:border-white/20;
+    @apply glass relative overflow-hidden rounded-3xl shadow-card transition-colors duration-300 hover:border-stone-900/20;
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 disabled:cursor-not-allowed disabled:opacity-60;
+    @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/70 focus-visible:ring-offset-2 focus-visible:ring-offset-ink-950 disabled:cursor-not-allowed disabled:opacity-60;
   }
 
   .btn-primary {
-    @apply btn bg-white text-ink-950 shadow-glow hover:-translate-y-0.5 hover:shadow-[0_0_60px_-10px_rgba(139,92,246,0.8)];
+    @apply btn bg-accent text-white shadow-glow hover:-translate-y-0.5 hover:bg-accent-soft hover:shadow-[0_0_60px_-10px_rgba(239,125,34,0.7)];
   }
 
   .btn-ghost {
-    @apply btn glass text-white hover:-translate-y-0.5 hover:border-white/30 hover:bg-white/[0.06];
+    @apply btn glass text-stone-900 hover:-translate-y-0.5 hover:border-stone-900/30 hover:bg-white/90;
   }
 
   .tag {
-    @apply inline-flex items-center rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-xs text-slate-300;
+    @apply inline-flex items-center rounded-full border border-stone-900/10 bg-white/50 px-3 py-1 font-mono text-xs text-stone-700;
   }
 
   .input {
-    @apply w-full rounded-2xl border border-white/10 bg-ink-900/70 px-4 py-3 text-sm text-white placeholder:text-slate-500 transition focus:border-accent/60 focus:outline-none focus:ring-2 focus:ring-accent/30;
+    @apply w-full rounded-2xl border border-stone-900/10 bg-white/70 px-4 py-3 text-sm text-stone-900 placeholder:text-stone-400 transition focus:border-accent/60 focus:outline-none focus:ring-2 focus:ring-accent/30;
   }
 
   .label {
-    @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-slate-400;
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wider text-stone-600;
   }
 }
 
@@ -111,8 +111,8 @@
     inset: 0;
     pointer-events: none;
     z-index: 50;
-    opacity: 0.05;
-    mix-blend-mode: overlay;
+    opacity: 0.06;
+    mix-blend-mode: multiply;
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200' viewBox='0 0 200 200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   }
 

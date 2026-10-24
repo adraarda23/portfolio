@@ -8,13 +8,14 @@ import { CollectionEditor } from './CollectionEditor'
 import type { FieldDef } from './Form'
 import { SingletonEditor } from './SingletonEditor'
 import { PanelHeader, useToast } from './ui'
+import { yearsLabel } from '@/lib/utils'
 
 const iconSelect = iconOptions.map((v) => ({ value: v, label: v }))
 
 const profileFields: FieldDef<Profile>[] = [
   { key: 'name', label: 'Full name', half: true, required: true },
   { key: 'title', label: 'Title', half: true, required: true, placeholder: 'Backend Developer' },
-  { key: 'subtitle', label: 'Subtitle / badge', placeholder: 'Open to new opportunities' },
+  { key: 'subtitle', label: 'Subtitle / badge', placeholder: 'Hello, I\'m', hint: 'Small pill above your name in the hero.' },
   { key: 'description', label: 'Hero description', type: 'textarea' },
   { key: 'githubUrl', label: 'GitHub URL', half: true },
   { key: 'linkedinUrl', label: 'LinkedIn URL', half: true },
@@ -74,8 +75,8 @@ export function StatsPanel() {
       onChanged={reload}
       render={(s) => (
         <div className="flex items-baseline gap-3">
-          <span className="font-display text-2xl font-bold text-white">{s.number}</span>
-          <span className="text-sm text-slate-400">{s.label}</span>
+          <span className="font-display text-2xl font-bold text-stone-900">{s.number}</span>
+          <span className="text-sm text-stone-600">{s.label}</span>
         </div>
       )}
     />
@@ -85,13 +86,13 @@ export function StatsPanel() {
 const experienceFields: FieldDef<Experience>[] = [
   { key: 'title', label: 'Role', half: true, required: true },
   { key: 'company', label: 'Company', half: true, required: true },
-  { key: 'type', label: 'Type', half: true, type: 'select', options: ['Internship', 'Full-time', 'Part-time', 'Freelance', 'Scholarship', 'Leadership', 'Volunteer'].map((v) => ({ value: v, label: v })) },
+  { key: 'type', label: 'Type', half: true, type: 'select', hint: 'Controls the badge on the timeline card.', options: ['Internship', 'Full-time', 'Part-time', 'Freelance', 'Scholarship', 'Leadership', 'Volunteer'].map((v) => ({ value: v, label: v })) },
   { key: 'location', label: 'Location', half: true },
   { key: 'period', label: 'Period', half: true, placeholder: 'Jun 2025 – Present' },
   { key: 'duration', label: 'Duration', half: true, placeholder: '3 months' },
   { key: 'description', label: 'Description', type: 'textarea' },
   { key: 'technologies', label: 'Technologies (comma separated)', type: 'list' },
-  { key: 'displayOrder', label: 'Order', type: 'number', half: true },
+  { key: 'displayOrder', label: 'Order', type: 'number', half: true, hint: 'Lower numbers appear first. You can also use the arrows in the list.' },
 ]
 export function ExperiencesPanel() {
   const { data, reload } = usePortfolio()
@@ -107,10 +108,10 @@ export function ExperiencesPanel() {
       onChanged={reload}
       render={(e) => (
         <div>
-          <p className="truncate font-medium text-white">
-            {e.title} <span className="text-slate-500">@</span> <span className="text-accent-soft">{e.company}</span>
+          <p className="truncate font-medium text-stone-900">
+            {e.title} <span className="text-stone-500">@</span> <span className="text-accent-soft">{e.company}</span>
           </p>
-          <p className="truncate text-xs text-slate-500">
+          <p className="truncate text-xs text-stone-500">
             {e.type} · {e.period}
           </p>
         </div>
@@ -143,8 +144,8 @@ export function ProjectsPanel() {
       onChanged={reload}
       render={(p) => (
         <div>
-          <p className="truncate font-medium text-white">{p.title}</p>
-          <p className="truncate text-xs text-slate-500">
+          <p className="truncate font-medium text-stone-900">{p.title}</p>
+          <p className="truncate text-xs text-stone-500">
             {p.category} · {p.year} · {p.technologies.slice(0, 4).join(', ')}
           </p>
         </div>
@@ -178,8 +179,8 @@ export function SocialLinksPanel() {
             <Icon name={s.iconClass} />
           </span>
           <div className="min-w-0">
-            <p className="font-medium text-white">{s.name}</p>
-            <p className="truncate text-xs text-slate-500">{s.url}</p>
+            <p className="font-medium text-stone-900">{s.name}</p>
+            <p className="truncate text-xs text-stone-500">{s.url}</p>
           </div>
         </div>
       )}
@@ -201,7 +202,7 @@ export function SkillsPanel() {
   const skillFields = useMemo<FieldDef<Skill>[]>(
     () => [
       { key: 'name', label: 'Name', half: true, required: true },
-      { key: 'level', label: 'Level (0–100)', type: 'number', half: true },
+      { key: 'level', label: 'Years of active use', type: 'number', half: true, hint: 'Shown as “3 yrs” next to the skill. Leave 0 to hide.' },
       { key: 'iconClass', label: 'Icon', half: true, type: 'icon', options: iconSelect },
       { key: 'skillCategoryId', label: 'Category', half: true, type: 'select', options: categories.map((c) => ({ value: c.id, label: c.title })) },
       { key: 'displayOrder', label: 'Order', type: 'number', half: true },
@@ -220,7 +221,7 @@ export function SkillsPanel() {
     <div className="space-y-6">
       <div className="flex gap-2">
         {(['skills', 'categories'] as const).map((t) => (
-          <button key={t} onClick={() => setTab(t)} className={`rounded-full border px-4 py-1.5 text-sm font-medium capitalize transition ${tab === t ? 'border-white bg-white text-ink-950' : 'border-white/10 text-slate-300 hover:border-white/30'}`}>
+          <button key={t} onClick={() => setTab(t)} className={`rounded-full border px-4 py-1.5 text-sm font-medium capitalize transition ${tab === t ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-900/10 text-stone-700 hover:border-stone-900/30'}`}>
             {t}
           </button>
         ))}
@@ -251,9 +252,9 @@ export function SkillsPanel() {
           }}
           onChanged={reload}
           render={(c) => (
-            <p className="font-medium text-white">
+            <p className="font-medium text-stone-900">
               <span className="mr-2">{c.icon}</span>
-              {c.title} <span className="ml-2 text-xs text-slate-500">{c.skills.length} skills</span>
+              {c.title} <span className="ml-2 text-xs text-stone-500">{c.skills.length} skills</span>
             </p>
           )}
         />
@@ -264,7 +265,7 @@ export function SkillsPanel() {
           singular="skill"
           items={skills}
           fields={skillFields}
-          defaults={{ name: '', iconClass: 'FaCode', level: 80, displayOrder: 1, skillCategoryId: categoryId === 'all' ? categories[0]?.id ?? 0 : categoryId }}
+          defaults={{ name: '', iconClass: 'FaCode', level: 1, displayOrder: 1, skillCategoryId: categoryId === 'all' ? categories[0]?.id ?? 0 : categoryId }}
           api={api.skills}
           onChanged={reload}
           render={(s) => (
@@ -273,13 +274,10 @@ export function SkillsPanel() {
                 <Icon name={s.iconClass} />
               </span>
               <div className="min-w-0 flex-1">
-                <p className="font-medium text-white">{s.name}</p>
-                <p className="text-xs text-slate-500">
-                  {catTitle(s.skillCategoryId)} · {s.level}%
+                <p className="font-medium text-stone-900">{s.name}</p>
+                <p className="text-xs text-stone-500">
+                  {catTitle(s.skillCategoryId)}{yearsLabel(s.level) ? ` · ${yearsLabel(s.level)}` : ''}
                 </p>
-              </div>
-              <div className="hidden h-1.5 w-28 overflow-hidden rounded-full bg-white/5 sm:block">
-                <div className="h-full bg-gradient-to-r from-accent to-accent-cyan" style={{ width: `${s.level}%` }} />
               </div>
             </div>
           )}

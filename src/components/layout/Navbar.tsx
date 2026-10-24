@@ -75,9 +75,9 @@ export function Navbar() {
             <span className="grid h-9 w-9 place-items-center rounded-full bg-gradient-to-br from-accent to-accent-cyan font-display text-sm font-bold text-ink-950 shadow-glow">
               {initials(data.profile.name) || 'A'}
             </span>
-            <span className="hidden font-display text-sm font-semibold text-white sm:block">
+            <span className="hidden font-display text-sm font-semibold text-stone-900 sm:block">
               {data.profile.name.split(' ')[0]}
-              <span className="text-slate-500">.dev</span>
+              <span className="text-stone-500">.dev</span>
             </span>
           </button>
 
@@ -87,13 +87,13 @@ export function Navbar() {
                 <button
                   onClick={() => go(s.id)}
                   className={`relative rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                    active === s.id ? 'text-white' : 'text-slate-400 hover:text-white'
+                    active === s.id ? 'text-stone-900' : 'text-stone-600 hover:text-stone-900'
                   }`}
                 >
                   {active === s.id && (
                     <motion.span
                       layoutId="nav-pill"
-                      className="absolute inset-0 rounded-full bg-white/10"
+                      className="absolute inset-0 rounded-full bg-stone-900/10"
                       transition={{ type: 'spring', stiffness: 350, damping: 30 }}
                     />
                   )}
@@ -109,7 +109,7 @@ export function Navbar() {
             </button>
             <button
               onClick={() => setOpen((v) => !v)}
-              className="grid h-10 w-10 place-items-center rounded-full text-white md:hidden"
+              className="grid h-10 w-10 place-items-center rounded-full text-stone-900 md:hidden"
               aria-label="Toggle menu"
               aria-expanded={open}
             >
@@ -146,7 +146,7 @@ export function Navbar() {
                   <button
                     onClick={() => go(s.id)}
                     className={`font-display text-3xl font-semibold ${
-                      active === s.id ? 'gradient-text' : 'text-slate-300'
+                      active === s.id ? 'gradient-text' : 'text-stone-700'
                     }`}
                   >
                     {s.label}

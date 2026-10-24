@@ -2,38 +2,9 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useState } from 'react'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { Icon } from '@/lib/icons'
+import { yearsLabel } from '@/lib/utils'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-
-function Ring({ level }: { level: number }) {
-  const r = 18
-  const c = 2 * Math.PI * r
-  return (
-    <svg viewBox="0 0 44 44" className="h-11 w-11 -rotate-90">
-      <circle cx="22" cy="22" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="3" />
-      <motion.circle
-        cx="22"
-        cy="22"
-        r={r}
-        fill="none"
-        stroke="url(#ring-grad)"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeDasharray={c}
-        initial={{ strokeDashoffset: c }}
-        whileInView={{ strokeDashoffset: c - (c * level) / 100 }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-      />
-      <defs>
-        <linearGradient id="ring-grad" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0%" stopColor="#a78bfa" />
-          <stop offset="100%" stopColor="#22d3ee" />
-        </linearGradient>
-      </defs>
-    </svg>
-  )
-}
 
 export function Skills() {
   const { data } = usePortfolio()
@@ -47,8 +18,8 @@ export function Skills() {
       <div className="container-x">
         <SectionHeading
           eyebrow="Skills"
-          title="A toolbox built across the stack."
-          description="From data models to deployment — the languages, frameworks and tools I reach for."
+          title="Technologies I've worked with so far."
+          description="Languages, frameworks and tools I've used in real projects — with how long I've been actively working with each."
           align="center"
         />
 
@@ -56,7 +27,7 @@ export function Skills() {
           <button
             onClick={() => setActiveId('all')}
             className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-              activeId === 'all' ? 'border-white bg-white text-ink-950' : 'border-white/10 text-slate-300 hover:border-white/30'
+              activeId === 'all' ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-900/10 text-stone-700 hover:border-stone-900/30'
             }`}
           >
             All
@@ -66,7 +37,7 @@ export function Skills() {
               key={c.id}
               onClick={() => setActiveId(c.id)}
               className={`rounded-full border px-4 py-2 text-sm font-medium transition ${
-                activeId === c.id ? 'border-white bg-white text-ink-950' : 'border-white/10 text-slate-300 hover:border-white/30'
+                activeId === c.id ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-900/10 text-stone-700 hover:border-stone-900/30'
               }`}
             >
               <span className="mr-1.5">{c.icon}</span>
@@ -88,34 +59,20 @@ export function Skills() {
                 className="card p-6"
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="font-display text-lg font-semibold text-white">
+                  <h3 className="font-display text-lg font-semibold text-stone-900">
                     <span className="mr-2">{cat.icon}</span>
                     {cat.title}
                   </h3>
-                  <span className="font-mono text-xs text-slate-500">{cat.skills.length} skills</span>
+                  <span className="font-mono text-xs text-stone-500">{cat.skills.length}</span>
                 </div>
                 <ul className="mt-5 space-y-3">
                   {cat.skills.map((s) => (
-                    <li key={s.id} className="flex items-center gap-3 rounded-2xl border border-white/5 bg-white/[0.02] p-3 transition hover:border-white/15 hover:bg-white/[0.04]">
+                    <li key={s.id} className="flex items-center gap-3 rounded-2xl border border-stone-900/5 bg-white/40 p-3 transition hover:border-stone-900/15 hover:bg-stone-900/50">
                       <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-ink-800 text-lg text-accent-soft">
                         <Icon name={s.iconClass} />
                       </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-sm font-medium text-white">{s.name}</p>
-                        <div className="mt-1.5 h-1 overflow-hidden rounded-full bg-white/5">
-                          <motion.div
-                            className="h-full rounded-full bg-gradient-to-r from-accent to-accent-cyan"
-                            initial={{ width: 0 }}
-                            whileInView={{ width: `${s.level}%` }}
-                            viewport={{ once: true }}
-                            transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
-                          />
-                        </div>
-                      </div>
-                      <div className="relative grid place-items-center">
-                        <Ring level={s.level} />
-                        <span className="absolute font-mono text-[10px] text-slate-300">{s.level}</span>
-                      </div>
+                      <p className="min-w-0 flex-1 truncate text-sm font-medium text-stone-900">{s.name}</p>
+                      {yearsLabel(s.level) && <span className="tag shrink-0 text-accent-soft">{yearsLabel(s.level)}</span>}
                     </li>
                   ))}
                 </ul>
@@ -128,8 +85,8 @@ export function Skills() {
       <div className="mask-fade-x mt-20 overflow-hidden">
         <div className="flex w-max animate-marquee gap-10 pr-10">
           {[...allSkills, ...allSkills].map((s, i) => (
-            <span key={`${s.id}-${i}`} className="inline-flex items-center gap-3 text-slate-500">
-              <span className="text-2xl text-slate-400">
+            <span key={`${s.id}-${i}`} className="inline-flex items-center gap-3 text-stone-500">
+              <span className="text-2xl text-stone-600">
                 <Icon name={s.iconClass} />
               </span>
               <span className="font-display text-lg font-medium">{s.name}</span>
