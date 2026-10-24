@@ -53,8 +53,8 @@ export function Contact() {
       <div className="container-x">
         <SectionHeading eyebrow="Contact" title={contact.introTitle} description={contact.introText} />
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
-          <div className="flex flex-col gap-4">
+        <div className="mt-14 grid min-w-0 gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
+          <div className="flex min-w-0 flex-col gap-4">
             {info.map((item, i) => (
               <Reveal key={item.label} delay={0.05 * i}>
                 <SpotlightCard className="p-5" color="rgba(226, 103, 63, 0.16)">
@@ -102,7 +102,7 @@ export function Contact() {
             </Reveal>
           </div>
 
-          <Reveal delay={0.1} className="h-full">
+          <Reveal delay={0.1} className="h-full min-w-0">
             <form onSubmit={submit} className="card flex h-full flex-col p-6 sm:p-8">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
@@ -120,7 +120,7 @@ export function Contact() {
               </div>
               <div className="mt-4 flex flex-1 flex-col">
                 <label htmlFor="message" className="label">Message</label>
-                <textarea id="message" className="input min-h-[150px] flex-1 resize-y" required value={form.message} onChange={update('message')} placeholder="Tell me about your project, idea or opportunity…" />
+                <textarea id="message" className="input min-h-[150px] max-w-full flex-1 resize-y" required value={form.message} onChange={update('message')} placeholder="Tell me about your project, idea or opportunity…" />
               </div>
               <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
                 <AnimatePresence mode="wait">
