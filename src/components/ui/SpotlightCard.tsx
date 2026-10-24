@@ -8,7 +8,7 @@ interface Props {
   color?: string
 }
 
-export function SpotlightCard({ children, className, color = 'rgba(139, 92, 246, 0.18)' }: Props) {
+export function SpotlightCard({ children, className, color = 'rgba(239, 125, 34, 0.16)' }: Props) {
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
 

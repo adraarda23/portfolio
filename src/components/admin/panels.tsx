@@ -1,5 +1,5 @@
-import { useMemo, useState, type FormEvent } from 'react'
-import { KeyRound, Loader2 } from 'lucide-react'
+import { useEffect, useMemo, useState, type FormEvent } from 'react'
+import { KeyRound, Loader2, Save } from 'lucide-react'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { api, ApiError, auth } from '@/lib/api'
 import { iconOptions, Icon } from '@/lib/icons'
@@ -196,7 +196,7 @@ const categoryFields: FieldDef<SkillCategory>[] = [
 export function SkillsPanel() {
   const { data, reload } = usePortfolio()
   const categories = data.skillCategories
-  const [tab, setTab] = useState<'skills' | 'categories'>('skills')
+  const [tab, setTab] = useState<'skills' | 'categories' | 'years'>('skills')
   const [categoryId, setCategoryId] = useState<number | 'all'>('all')
 
   const skillFields = useMemo<FieldDef<Skill>[]>(
@@ -220,7 +220,7 @@ export function SkillsPanel() {
   return (
     <div className="space-y-6">
       <div className="flex gap-2">
-        {(['skills', 'categories'] as const).map((t) => (
+        {(['skills', 'categories', 'years'] as const).map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`rounded-full border px-4 py-1.5 text-sm font-medium capitalize transition ${tab === t ? 'border-stone-900 bg-stone-900 text-white' : 'border-stone-900/10 text-stone-700 hover:border-stone-900/30'}`}>
             {t}
           </button>
@@ -237,7 +237,9 @@ export function SkillsPanel() {
         )}
       </div>
 
-      {tab === 'categories' ? (
+      {tab === 'years' ? (
+        <YearsEditor skills={categories.flatMap((c) => c.skills.map((s) => ({ ...s, skillCategoryId: s.skillCategoryId || c.id, category: c.title })))} onSaved={reload} />
+      ) : tab === 'categories' ? (
         <CollectionEditor<SkillCategory>
           title="Skill categories"
           description="Groups that skills belong to."
@@ -283,6 +285,78 @@ export function SkillsPanel() {
           )}
         />
       )}
+    </div>
+  )
+}
+
+function YearsEditor({ skills, onSaved }: { skills: (Skill & { category: string })[]; onSaved: () => Promise<void> | void }) {
+  const toast = useToast()
+  const [values, setValues] = useState<Record<number, number>>({})
+  const [saving, setSaving] = useState(false)
+  useEffect(() => setValues(Object.fromEntries(skills.map((s) => [s.id, s.level]))), [skills])
+
+  const dirty = skills.filter((s) => values[s.id] !== undefined && values[s.id] !== s.level)
+
+  const saveAll = async () => {
+    setSaving(true)
+    try {
+      await Promise.all(
+        dirty.map((s) => {
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { id: _id, category: _c, ...rest } = s
+          return api.skills.update(s.id, { ...rest, level: values[s.id] })
+        }),
+      )
+      toast('ok', `${dirty.length} skill${dirty.length === 1 ? '' : 's'} updated`)
+      await onSaved()
+    } catch (err) {
+      toast('error', err instanceof ApiError ? err.message : 'Save failed')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  return (
+    <div>
+      <PanelHeader
+        title="Years of active use"
+        description="How long you've actively worked with each technology. Shown as “3 yrs” on the site; values above 30 are treated as legacy percentages and hidden."
+        action={
+          <button className="btn-primary" disabled={saving || dirty.length === 0} onClick={saveAll}>
+            {saving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
+            Save {dirty.length > 0 ? `(${dirty.length})` : ''}
+          </button>
+        }
+      />
+      <div className="card mt-8 divide-y divide-stone-900/5">
+        {skills.map((s) => {
+          const v = values[s.id] ?? s.level
+          const legacy = v > 30
+          return (
+            <div key={s.id} className="flex items-center gap-4 px-5 py-3">
+              <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent-cyan/15 text-lg text-accent-pink">
+                <Icon name={s.iconClass} />
+              </span>
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium text-stone-900">{s.name}</p>
+                <p className="truncate text-xs text-stone-500">{s.category}{legacy ? ' · legacy % value, not shown' : ''}</p>
+              </div>
+              <div className="flex items-center gap-2">
+                <input
+                  type="number"
+                  min={0}
+                  max={30}
+                  step={1}
+                  className={`input w-24 py-2 text-right ${legacy ? 'border-accent-pink/50' : ''}`}
+                  value={v}
+                  onChange={(e) => setValues((x) => ({ ...x, [s.id]: e.target.valueAsNumber || 0 }))}
+                />
+                <span className="w-8 text-xs text-stone-500">yrs</span>
+              </div>
+            </div>
+          )
+        })}
+      </div>
     </div>
   )
 }

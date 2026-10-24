@@ -53,11 +53,11 @@ export function Contact() {
       <div className="container-x">
         <SectionHeading eyebrow="Contact" title={contact.introTitle} description={contact.introText} />
 
-        <div className="mt-14 grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
-          <div className="space-y-4">
+        <div className="mt-14 grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
+          <div className="flex flex-col gap-4">
             {info.map((item, i) => (
               <Reveal key={item.label} delay={0.05 * i}>
-                <SpotlightCard className="p-5">
+                <SpotlightCard className="p-5" color="rgba(226, 103, 63, 0.16)">
                   {item.label === 'Email' && (
                     <button
                       type="button"
@@ -70,7 +70,7 @@ export function Contact() {
                     </button>
                   )}
                   <a href={item.href} className="flex items-center gap-4 pr-20">
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-accent/15 text-accent-soft">
+                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-accent-pink/15 text-accent-pink">
                       <item.icon size={18} />
                     </span>
                     <div className="min-w-0">
@@ -81,8 +81,8 @@ export function Contact() {
                 </SpotlightCard>
               </Reveal>
             ))}
-            <Reveal delay={0.2}>
-              <div className="card p-5">
+            <Reveal delay={0.2} className="flex-1">
+              <div className="card flex h-full flex-col justify-center p-5">
                 <p className="text-sm text-stone-600">{contact.ctaText}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {socialLinks.map((s) => (
@@ -102,8 +102,8 @@ export function Contact() {
             </Reveal>
           </div>
 
-          <Reveal delay={0.1}>
-            <form onSubmit={submit} className="card p-6 sm:p-8">
+          <Reveal delay={0.1} className="h-full">
+            <form onSubmit={submit} className="card flex h-full flex-col p-6 sm:p-8">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
                   <label htmlFor="name" className="label">Name</label>
@@ -118,9 +118,9 @@ export function Contact() {
                 <label htmlFor="subject" className="label">Subject</label>
                 <input id="subject" className="input" value={form.subject} onChange={update('subject')} placeholder="What's this about?" />
               </div>
-              <div className="mt-4">
+              <div className="mt-4 flex flex-1 flex-col">
                 <label htmlFor="message" className="label">Message</label>
-                <textarea id="message" className="input min-h-[150px] resize-y" required value={form.message} onChange={update('message')} placeholder="Tell me about your project, idea or opportunity…" />
+                <textarea id="message" className="input min-h-[150px] flex-1 resize-y" required value={form.message} onChange={update('message')} placeholder="Tell me about your project, idea or opportunity…" />
               </div>
               <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
                 <AnimatePresence mode="wait">

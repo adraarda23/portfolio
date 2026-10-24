@@ -1,6 +1,6 @@
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { Calendar, Clock, MapPin } from 'lucide-react'
-import { useRef } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
@@ -19,6 +19,21 @@ export function Experience() {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start 70%', 'end 70%'] })
   const scaleY = useSpring(scrollYProgress, { stiffness: 80, damping: 25 })
+  const listRef = useRef<HTMLOListElement>(null)
+  const [lineHeight, setLineHeight] = useState<number>()
+
+  useLayoutEffect(() => {
+    const list = listRef.current
+    if (!list) return
+    const measure = () => {
+      const last = list.lastElementChild as HTMLElement | null
+      setLineHeight(last ? last.offsetTop : undefined)
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(list)
+    return () => ro.disconnect()
+  }, [data.experiences.length])
 
   return (
     <section id="experience" className="section">
@@ -30,20 +45,20 @@ export function Experience() {
         />
 
         <div ref={ref} className="relative mt-16">
-          <div className="absolute left-4 top-0 h-full w-px bg-stone-900/10 md:left-1/2 md:-translate-x-1/2" />
+          <div className="absolute left-4 top-7 w-px bg-stone-900/10 md:left-1/2 md:-translate-x-1/2" style={{ height: lineHeight }} />
           <motion.div
-            style={{ scaleY }}
-            className="absolute left-4 top-0 h-full w-px origin-top bg-gradient-to-b from-accent via-accent-cyan to-accent-pink md:left-1/2 md:-translate-x-1/2"
+            style={{ scaleY, height: lineHeight }}
+            className="absolute left-4 top-7 w-px origin-top bg-gradient-to-b from-accent via-accent-cyan to-accent-pink md:left-1/2 md:-translate-x-1/2"
           />
 
-          <ol className="space-y-10">
+          <ol ref={listRef} className="space-y-10">
             {data.experiences.map((exp, i) => {
               const left = i % 2 === 0
               const style = typeStyles[exp.type.toLowerCase()] ?? 'border-stone-900/15 bg-stone-900/5 text-stone-700'
               return (
                 <li key={exp.id} className="relative md:grid md:grid-cols-2 md:gap-12">
                   <span className="absolute left-4 top-7 z-10 -translate-x-1/2 md:left-1/2">
-                    <span className="block h-3 w-3 rounded-full border-2 border-ink-950 bg-accent-cyan shadow-glow-cyan" />
+                    <span className="block h-3 w-3 rounded-full border-2 border-ink-950 bg-accent shadow-glow" />
                   </span>
                   <Reveal className={`pl-12 md:pl-0 ${left ? 'md:col-start-1 md:pr-6' : 'md:col-start-2 md:pl-6'}`} delay={0.05}>
                     <SpotlightCard className="p-6 sm:p-7">

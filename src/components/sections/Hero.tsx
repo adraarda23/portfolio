@@ -1,9 +1,26 @@
 import { motion } from 'framer-motion'
 import { ArrowDown, ArrowUpRight, Mail } from 'lucide-react'
+import { Suspense, lazy, useEffect, useState } from 'react'
+import { useReducedMotion } from '@/hooks/useReducedMotion'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { Icon } from '@/lib/icons'
 import { Magnetic } from '@/components/ui/Magnetic'
 import { Tilt } from '@/components/ui/Tilt'
+
+const HeroScene = lazy(() => import('@/components/three/HeroScene'))
+
+function useShowScene() {
+  const reduce = useReducedMotion()
+  const [wide, setWide] = useState(false)
+  useEffect(() => {
+    const mq = window.matchMedia('(min-width: 1024px)')
+    const update = () => setWide(mq.matches)
+    update()
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
+  return wide && !reduce
+}
 
 const container = {
   hidden: {},
@@ -95,6 +112,7 @@ export function Hero() {
   const { data } = usePortfolio()
   const { profile, socialLinks } = data
   const [first, ...rest] = profile.name.split(' ')
+  const showScene = useShowScene()
 
   return (
     <section id="home" className="relative flex min-h-screen items-center overflow-hidden pt-28 pb-20 sm:pt-32">
@@ -159,7 +177,16 @@ export function Hero() {
           transition={{ duration: 1, delay: 0.5, ease: [0.22, 1, 0.36, 1] }}
           className="relative flex min-w-0 justify-center lg:justify-end"
         >
-          <CodeCard />
+          {showScene && (
+            <div className="pointer-events-none absolute -inset-x-24 -inset-y-32 z-0 opacity-90">
+              <Suspense fallback={null}>
+                <HeroScene />
+              </Suspense>
+            </div>
+          )}
+          <div className="relative z-10">
+            <CodeCard />
+          </div>
         </motion.div>
       </div>
 

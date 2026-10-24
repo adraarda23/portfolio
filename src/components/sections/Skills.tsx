@@ -68,11 +68,11 @@ export function Skills() {
                 <ul className="mt-5 space-y-3">
                   {cat.skills.map((s) => (
                     <li key={s.id} className="flex items-center gap-3 rounded-2xl border border-stone-900/5 bg-white/40 p-3 transition hover:border-stone-900/15 hover:bg-stone-900/50">
-                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-ink-800 text-lg text-accent-soft">
+                      <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-accent-cyan/15 text-lg text-accent-pink">
                         <Icon name={s.iconClass} />
                       </span>
                       <p className="min-w-0 flex-1 truncate text-sm font-medium text-stone-900">{s.name}</p>
-                      {yearsLabel(s.level) && <span className="tag shrink-0 text-accent-soft">{yearsLabel(s.level)}</span>}
+                      {yearsLabel(s.level) && <span className="tag shrink-0 border-accent/30 bg-accent/10 text-accent">{yearsLabel(s.level)}</span>}
                     </li>
                   ))}
                 </ul>

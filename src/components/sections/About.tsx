@@ -37,7 +37,7 @@ export function About() {
 
           <div className="grid gap-4 md:col-span-2">
             <Reveal delay={0.1}>
-              <SpotlightCard className="p-6" color="rgba(34, 211, 238, 0.18)">
+              <SpotlightCard className="p-6" color="rgba(227, 179, 44, 0.2)">
                 <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent-cyan/15 text-accent-cyan">
                   <GraduationCap size={18} />
                 </span>
@@ -47,7 +47,7 @@ export function About() {
               </SpotlightCard>
             </Reveal>
             <Reveal delay={0.18}>
-              <SpotlightCard className="p-6" color="rgba(244, 114, 182, 0.18)">
+              <SpotlightCard className="p-6" color="rgba(226, 103, 63, 0.18)">
                 <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent-pink/15 text-accent-pink">
                   <Briefcase size={18} />
                 </span>
@@ -59,7 +59,7 @@ export function About() {
           </div>
 
           <Reveal delay={0.1} className="md:col-span-2">
-            <SpotlightCard className="h-full p-6" color="rgba(251, 191, 36, 0.16)">
+            <SpotlightCard className="h-full p-6" color="rgba(244, 197, 74, 0.22)">
               <span className="grid h-10 w-10 place-items-center rounded-2xl bg-accent-amber/15 text-accent-amber">
                 <Target size={18} />
               </span>
