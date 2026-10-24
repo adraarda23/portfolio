@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Data;
@@ -28,6 +29,7 @@ public class ProfileController : ControllerBase
         );
     }
 
+    [Authorize]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateProfileDto dto)
     {

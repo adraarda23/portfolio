@@ -1,62 +1,66 @@
-# Arda Aydın Kılınç - Portfolio
+# Arda Aydın Kılınç — Portfolio
 
-Modern and minimal portfolio website built with React and Framer Motion.
+Personal portfolio at **https://ardaaydinkilinc.com**.
 
-- Website: https://ardaaydinkilinc.com
+A dark, motion-rich single-page site whose content (profile, about, stats, experience, skills, projects, contact, social links) is served by a .NET API and managed from an admin panel at `/admin`.
 
-## 🚀 Features
+## Stack
 
-- ✨ Smooth animations with Framer Motion
-- 📱 Fully responsive design
-- 🎨 Modern and minimal UI
-- ⚡ Fast and optimized with Vite
-- 🌙 Dark theme
+| Layer    | Tech |
+|----------|------|
+| Frontend | Vite 5 · React 18 · TypeScript · Tailwind CSS · Framer Motion · React Router · Lucide / React Icons |
+| Backend  | ASP.NET Core 8 · EF Core (MySQL) · JWT auth · BCrypt · SMTP mail (`PortfolioApi/`) |
+| Hosting  | IIS / Plesk — SPA served from `dist/`, API mounted under `/api` |
 
-## 🛠️ Tech Stack
-
-- **Framework:** React 18
-- **Build Tool:** Vite
-- **Animations:** Framer Motion
-- **Icons:** React Icons
-- **Styling:** CSS3
-
-## 📦 Installation
+## Frontend
 
 ```bash
-# Clone the repository
-git clone https://github.com/adraarda23/portfolio.git
-
-# Navigate to project directory
-cd portfolio
-
-# Install dependencies
 npm install
-
-# Run development server
-npm run dev
-
-# Build for production
-npm run build
-
-# Preview production build
-npm run preview
+npm run dev      # http://localhost:5173 — /api is proxied to VITE_PROXY_TARGET (default: production API)
+npm run build    # type-check + production build into dist/
+npm run lint
 ```
 
-## 🌐 Deployment
+Environment (see `.env.example`):
 
-This project is configured for GitHub Pages deployment.
+| Variable            | Default                         | Purpose |
+|---------------------|---------------------------------|---------|
+| `VITE_API_URL`      | `/api`                          | Base URL the browser calls |
+| `VITE_PROXY_TARGET` | `https://ardaaydinkilinc.com`   | Where the dev server proxies `/api` (use `http://localhost:5224` for a local backend) |
+
+If the API is unreachable the site renders a bundled snapshot (`src/data/fallback.ts`) instead of an empty page; the admin panel shows a warning in that state.
+
+### Structure
+
+```
+src/
+  pages/            Landing (public) · Admin (lazy-loaded, /admin/*)
+  components/
+    sections/       Hero · About · Experience · Skills · Projects · Contact
+    layout/         Navbar · Footer · Background · ScrollProgress
+    ui/             Reveal · SpotlightCard · Tilt · Magnetic · Counter · SectionHeading
+    admin/          Login · CollectionEditor · SingletonEditor · Form · panels
+  context/          PortfolioContext — loads every resource, falls back per resource
+  lib/              api.ts (typed client) · types.ts · icons.tsx · utils.ts
+  data/             fallback.ts
+public/
+  web.config        IIS rewrite: SPA fallback for deep links, leaves /api alone
+  og-image.png      Social preview · favicon.svg
+```
+
+## Backend
 
 ```bash
-# Deploy to GitHub Pages
-npm run deploy
+cd PortfolioApi
+cp appsettings.Example.json appsettings.Development.json   # fill in MySQL, JWT and SMTP settings
+dotnet run                                                # Swagger at /swagger in Development
 ```
 
-## 📄 License
+All `POST`/`PUT`/`DELETE` endpoints require a `Bearer` token obtained from `POST /auth/login`; `GET` endpoints and `POST /email/send` are public.
 
-© 2025 Arda Aydın Kılınç. All rights reserved.
+## Deploy
 
-## 📧 Contact
+1. `npm run build` → upload `dist/` (includes `web.config`) to the site root.
+2. Publish `PortfolioApi` as an IIS application mounted at `/api`.
 
-- Email: ardaaydinkilinc@gmail.com
-- GitHub: [@adraarda23](https://github.com/adraarda23)
-- LinkedIn: [Arda Aydın Kılınç](https://www.linkedin.com/in/ardaaydınkılınç/)
+The GitHub Actions workflow in `.github/workflows/deploy.yml` also builds the frontend and publishes it to GitHub Pages.

@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Data;
@@ -28,6 +29,7 @@ public class ContactController : ControllerBase
         );
     }
 
+    [Authorize]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateContactDto dto)
     {
@@ -64,6 +66,7 @@ public class SocialLinksController : ControllerBase
         return links.Select(l => new SocialLinkDto(l.Id, l.Name, l.IconClass, l.Url, l.Color, l.DisplayOrder)).ToList();
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<SocialLinkDto>> Create(CreateSocialLinkDto dto)
     {
@@ -82,6 +85,7 @@ public class SocialLinksController : ControllerBase
         return CreatedAtAction(nameof(GetAll), new SocialLinkDto(link.Id, link.Name, link.IconClass, link.Url, link.Color, link.DisplayOrder));
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateSocialLinkDto dto)
     {
@@ -98,6 +102,7 @@ public class SocialLinksController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

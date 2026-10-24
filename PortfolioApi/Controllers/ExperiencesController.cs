@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Data;
@@ -38,6 +39,7 @@ public class ExperiencesController : ControllerBase
         );
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<ExperienceDto>> Create(CreateExperienceDto dto)
     {
@@ -64,6 +66,7 @@ public class ExperiencesController : ControllerBase
         ));
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateExperienceDto dto)
     {
@@ -84,6 +87,7 @@ public class ExperiencesController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {

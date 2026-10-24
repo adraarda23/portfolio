@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PortfolioApi.Data;
@@ -32,6 +33,7 @@ public class AboutController : ControllerBase
         );
     }
 
+    [Authorize]
     [HttpPut]
     public async Task<IActionResult> Update(UpdateAboutDto dto)
     {
@@ -72,6 +74,7 @@ public class StatsController : ControllerBase
         return stats.Select(s => new StatDto(s.Id, s.Number, s.Label, s.DisplayOrder)).ToList();
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<StatDto>> Create(CreateStatDto dto)
     {
@@ -86,6 +89,7 @@ public class StatsController : ControllerBase
         return CreatedAtAction(nameof(GetAll), new StatDto(stat.Id, stat.Number, stat.Label, stat.DisplayOrder));
     }
 
+    [Authorize]
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UpdateStatDto dto)
     {
@@ -100,6 +104,7 @@ public class StatsController : ControllerBase
         return NoContent();
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
