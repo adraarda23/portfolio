@@ -69,7 +69,7 @@
   }
 
   .section {
-    @apply relative py-20 sm:py-28;
+    @apply relative py-14 sm:py-24 lg:py-28;
   }
 
   .eyebrow {
@@ -113,7 +113,7 @@
   }
 
   .chip {
-    @apply inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-medium transition;
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border px-3.5 py-1.5 text-sm font-medium transition sm:px-4 sm:py-2;
   }
 
   .chip-active {

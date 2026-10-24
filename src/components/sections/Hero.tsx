@@ -21,8 +21,8 @@ export function Hero() {
   const greeting = profile.subtitle.replace(/^\p{Extended_Pictographic}\s*/u, '') || "Hello, I'm"
 
   return (
-    <section id="home" className="relative flex min-h-[100svh] items-center overflow-hidden pb-16 pt-28 sm:pt-32 lg:pb-20">
-      <div className="container-x grid items-center gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+    <section id="home" className="relative flex items-center overflow-hidden pb-6 pt-24 sm:pb-12 sm:pt-32 lg:min-h-[100svh] lg:pb-20">
+      <div className="container-x grid items-center gap-10 sm:gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-10">
         <motion.div variants={container} initial="hidden" animate="show" className="min-w-0 text-center lg:text-left">
           <motion.p variants={item} className="inline-flex items-center gap-2 rounded-full bg-cream-50 px-4 py-2 text-sm font-medium text-cocoa-700 shadow-soft ring-1 ring-cocoa-900/[0.06]">
             <span className="inline-block origin-[70%_70%] animate-wave text-base">👋</span>

@@ -21,8 +21,8 @@ export function Projects() {
             title="Things I've made with care."
             description="A few things I've built — from enterprise event streaming to a bot that feeds a whole campus."
           />
-          <Reveal className="-mx-4 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0" delay={0.1}>
-            <div className="flex w-max gap-2 sm:w-auto sm:flex-wrap">
+          <Reveal delay={0.1}>
+            <div className="flex flex-wrap gap-2">
               {['All', ...categories].map((c) => (
                 <button key={c} onClick={() => setFilter(c)} className={`chip whitespace-nowrap ${filter === c ? 'chip-active' : 'chip-idle'}`}>
                   {c}

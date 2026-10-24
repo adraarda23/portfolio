@@ -25,8 +25,8 @@ export function Skills() {
           align="center"
         />
 
-        <Reveal className="-mx-4 mt-10 overflow-x-auto px-4 pb-1 sm:mx-0 sm:px-0" delay={0.1}>
-          <div className="flex w-max gap-2 sm:mx-auto sm:w-auto sm:flex-wrap sm:justify-center">
+        <Reveal className="mt-10" delay={0.1}>
+          <div className="flex flex-wrap justify-center gap-2">
             <button onClick={() => setActiveId('all')} className={`chip ${activeId === 'all' ? 'chip-active' : 'chip-idle'}`}>
               All
             </button>
@@ -51,7 +51,7 @@ export function Skills() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.97 }}
                   transition={{ duration: 0.3 }}
-                  className="card p-5 sm:p-6"
+                  className="card p-4 sm:p-6"
                 >
                   <div className="flex items-center justify-between gap-3">
                     <h3 className="flex items-center gap-3 font-display text-lg font-semibold text-cocoa-900">
@@ -60,14 +60,16 @@ export function Skills() {
                     </h3>
                     <span className="rounded-full bg-cream-200 px-2.5 py-0.5 text-xs font-semibold text-cocoa-600">{cat.skills.length}</span>
                   </div>
-                  <ul className="mt-5 divide-y divide-cocoa-900/[0.06]">
+                  <ul className="mt-4 grid grid-cols-2 gap-2 sm:mt-5 sm:grid-cols-1 sm:gap-0 sm:divide-y sm:divide-cocoa-900/[0.06]">
                     {cat.skills.map((s) => (
-                      <li key={s.id} className="flex items-center gap-3 py-2.5">
-                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-cream-200 text-base text-cocoa-700">
+                      <li key={s.id} className="flex min-w-0 items-center gap-2.5 rounded-2xl bg-cream-100 p-2.5 sm:gap-3 sm:rounded-none sm:bg-transparent sm:px-0">
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-cream-50 text-base text-cocoa-700 sm:bg-cream-200">
                           <Icon name={s.iconClass} />
                         </span>
-                        <p className="min-w-0 flex-1 truncate text-sm font-medium text-cocoa-800">{s.name}</p>
-                        {yearsLabel(s.level) && <span className="shrink-0 text-xs font-semibold text-clay-600">{yearsLabel(s.level)}</span>}
+                        <div className="min-w-0 flex-1 sm:flex sm:items-center sm:gap-3">
+                          <p className="truncate text-sm font-medium text-cocoa-800 sm:flex-1">{s.name}</p>
+                          {yearsLabel(s.level) && <span className="block text-xs font-semibold text-clay-600 sm:shrink-0">{yearsLabel(s.level)}</span>}
+                        </div>
                       </li>
                     ))}
                   </ul>
