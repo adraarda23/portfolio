@@ -89,7 +89,7 @@ const experienceFields: FieldDef<Experience>[] = [
   { key: 'type', label: 'Type', half: true, type: 'select', hint: 'Controls the badge on the timeline card.', options: ['Internship', 'Full-time', 'Part-time', 'Freelance', 'Scholarship', 'Leadership', 'Volunteer'].map((v) => ({ value: v, label: v })) },
   { key: 'location', label: 'Location', half: true },
   { key: 'period', label: 'Period', half: true, placeholder: 'Jun 2025 – Present' },
-  { key: 'duration', label: 'Duration', half: true, placeholder: '3 months' },
+  { key: 'duration', label: 'Duration', half: true, placeholder: '3 months', hint: 'Calculated from the period automatically when it reads like “Sep 2025 – Present”. Used only as a fallback.' },
   { key: 'description', label: 'Description', type: 'textarea' },
   { key: 'technologies', label: 'Technologies (comma separated)', type: 'list' },
   { key: 'displayOrder', label: 'Order', type: 'number', half: true, hint: 'Lower numbers appear first. You can also use the arrows in the list.' },

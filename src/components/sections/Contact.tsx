@@ -6,7 +6,6 @@ import { api, ApiError } from '@/lib/api'
 import { Icon } from '@/lib/icons'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { SpotlightCard } from '@/components/ui/SpotlightCard'
 
 type Status = { kind: 'idle' } | { kind: 'sending' } | { kind: 'ok'; message: string } | { kind: 'error'; message: string }
 
@@ -43,55 +42,67 @@ export function Contact() {
   }
 
   const info = [
-    { icon: Mail, label: 'Email', value: contact.email, href: `mailto:${contact.email}` },
-    { icon: Phone, label: 'Phone', value: contact.phone, href: `tel:${contact.phone.replace(/\s/g, '')}` },
-    { icon: MapPin, label: 'Location', value: contact.location },
+    { icon: Phone, label: 'phone', value: contact.phone, href: `tel:${(contact.phone ?? '').replace(/\s/g, '')}` },
+    { icon: MapPin, label: 'location', value: contact.location },
   ].filter((i) => i.value)
 
   return (
     <section id="contact" className="section">
       <div className="container-x">
-        <SectionHeading eyebrow="Contact" title={contact.introTitle} description={contact.introText} />
+        <div className="rail before:bottom-auto before:h-10 sm:before:h-16 lg:before:h-20">
+          <SectionHeading index={5} method="POST" path="/contact" title={contact.introTitle || 'Contact'} description={contact.introText} />
 
-        <div className="mt-14 grid min-w-0 gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-stretch">
-          <div className="flex min-w-0 flex-col gap-4">
-            {info.map((item, i) => (
-              <Reveal key={item.label} delay={0.05 * i}>
-                <SpotlightCard className="p-5" color="rgba(226, 103, 63, 0.16)">
-                  {item.label === 'Email' && (
+          <div className="mt-10 grid min-w-0 gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+            <Reveal className="flex min-w-0 flex-col gap-4">
+              {contact.email && (
+                <div className="card p-5">
+                  <p className="font-mono text-xs text-cocoa-500">email:</p>
+                  <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                    <a href={`mailto:${contact.email}`} className="inline-flex min-w-0 items-center gap-2 font-semibold text-cocoa-900 hover:text-clay-700">
+                      <Mail size={16} className="shrink-0 text-clay-600" />
+                      <span className="break-all">{contact.email}</span>
+                    </a>
                     <button
                       type="button"
                       onClick={copyEmail}
                       aria-label="Copy email address"
-                      className="absolute right-4 top-1/2 z-10 inline-flex -translate-y-1/2 items-center gap-1.5 rounded-full border border-stone-900/10 px-3 py-1.5 text-xs text-stone-700 transition hover:border-stone-900/30 hover:text-stone-900"
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-cocoa-900/10 px-2.5 py-1 font-mono text-xs text-cocoa-600 transition hover:border-cocoa-900/30 hover:text-cocoa-900"
                     >
-                      {copied ? <Check size={12} className="text-accent-soft" /> : <Copy size={12} />}
-                      {copied ? 'Copied' : 'Copy'}
+                      {copied ? <Check size={12} className="text-sage-700" /> : <Copy size={12} />}
+                      {copied ? 'copied' : 'copy'}
                     </button>
-                  )}
-                  <a href={item.href} className="flex items-center gap-4 pr-20">
-                    <span className="grid h-11 w-11 shrink-0 place-items-center rounded-2xl bg-accent-pink/15 text-accent-pink">
-                      <item.icon size={18} />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="font-mono text-[10px] uppercase tracking-widest text-stone-500">{item.label}</p>
-                      <p className="truncate text-sm font-medium text-stone-900">{item.value}</p>
+                  </div>
+                </div>
+              )}
+
+              {info.length > 0 && (
+                <div className="card divide-y divide-cocoa-900/[0.08]">
+                  {info.map((item) => (
+                    <div key={item.label} className="flex items-center gap-3 p-5">
+                      <item.icon size={16} className="shrink-0 text-cocoa-500" />
+                      <span className="w-16 shrink-0 font-mono text-xs text-cocoa-500">{item.label}:</span>
+                      {item.href ? (
+                        <a href={item.href} className="min-w-0 truncate text-sm font-medium text-cocoa-900 hover:text-clay-700">
+                          {item.value}
+                        </a>
+                      ) : (
+                        <span className="min-w-0 truncate text-sm font-medium text-cocoa-900">{item.value}</span>
+                      )}
                     </div>
-                  </a>
-                </SpotlightCard>
-              </Reveal>
-            ))}
-            <Reveal delay={0.2} className="flex-1">
-              <div className="card flex h-full flex-col justify-center p-5">
-                <p className="text-sm text-stone-600">{contact.ctaText}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
+                  ))}
+                </div>
+              )}
+
+              <div className="card flex-1 p-5">
+                {contact.ctaText && <p className="text-sm text-cocoa-600">{contact.ctaText}</p>}
+                <div className="mt-3 flex flex-wrap gap-2">
                   {socialLinks.map((s) => (
                     <a
                       key={s.id}
                       href={s.url}
                       target={s.url.startsWith('mailto:') ? undefined : '_blank'}
                       rel="noreferrer"
-                      className="inline-flex items-center gap-2 rounded-full border border-stone-900/10 px-4 py-2 text-sm text-stone-700 transition hover:border-stone-900/30 hover:text-stone-900"
+                      className="inline-flex items-center gap-2 rounded-lg border border-cocoa-900/10 px-3 py-2 text-sm font-medium text-cocoa-700 transition hover:border-cocoa-900/30 hover:text-cocoa-900"
                     >
                       <Icon name={s.iconClass} size={14} />
                       {s.name}
@@ -100,48 +111,48 @@ export function Contact() {
                 </div>
               </div>
             </Reveal>
-          </div>
 
-          <Reveal delay={0.1} className="h-full min-w-0">
-            <form onSubmit={submit} className="card flex h-full flex-col p-6 sm:p-8">
-              <div className="grid gap-4 sm:grid-cols-2">
-                <div>
-                  <label htmlFor="name" className="label">Name</label>
-                  <input id="name" className="input" required value={form.name} onChange={update('name')} placeholder="Your name" />
+            <Reveal delay={0.08} className="min-w-0">
+              <form onSubmit={submit} className="card flex h-full flex-col p-5 sm:p-6">
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div>
+                    <label htmlFor="name" className="label">name</label>
+                    <input id="name" className="input" required value={form.name} onChange={update('name')} placeholder="Your name" autoComplete="name" />
+                  </div>
+                  <div>
+                    <label htmlFor="email" className="label">email</label>
+                    <input id="email" type="email" className="input" required value={form.email} onChange={update('email')} placeholder="you@example.com" autoComplete="email" />
+                  </div>
                 </div>
-                <div>
-                  <label htmlFor="email" className="label">Email</label>
-                  <input id="email" type="email" className="input" required value={form.email} onChange={update('email')} placeholder="you@example.com" />
+                <div className="mt-4">
+                  <label htmlFor="subject" className="label">subject</label>
+                  <input id="subject" className="input" value={form.subject} onChange={update('subject')} placeholder="What's this about?" />
                 </div>
-              </div>
-              <div className="mt-4">
-                <label htmlFor="subject" className="label">Subject</label>
-                <input id="subject" className="input" value={form.subject} onChange={update('subject')} placeholder="What's this about?" />
-              </div>
-              <div className="mt-4 flex flex-1 flex-col">
-                <label htmlFor="message" className="label">Message</label>
-                <textarea id="message" className="input min-h-[150px] max-w-full flex-1 resize-y" required value={form.message} onChange={update('message')} placeholder="Tell me about your project, idea or opportunity…" />
-              </div>
-              <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
-                <AnimatePresence mode="wait">
-                  {status.kind === 'ok' && (
-                    <motion.p key="ok" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="inline-flex items-center gap-2 text-sm text-emerald-300">
-                      <CheckCircle2 size={16} /> {status.message}
-                    </motion.p>
-                  )}
-                  {status.kind === 'error' && (
-                    <motion.p key="err" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="inline-flex items-center gap-2 text-sm text-rose-300">
-                      <XCircle size={16} /> {status.message}
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-                <button type="submit" disabled={status.kind === 'sending'} className="btn-primary ml-auto">
-                  {status.kind === 'sending' ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
-                  {status.kind === 'sending' ? 'Sending…' : 'Send message'}
-                </button>
-              </div>
-            </form>
-          </Reveal>
+                <div className="mt-4 flex flex-1 flex-col">
+                  <label htmlFor="message" className="label">message</label>
+                  <textarea id="message" className="input min-h-[150px] max-w-full flex-1 resize-y" required value={form.message} onChange={update('message')} placeholder="Tell me about your project, idea or opportunity…" />
+                </div>
+                <div className="mt-5 flex flex-col-reverse items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+                  <AnimatePresence mode="wait">
+                    {status.kind === 'ok' && (
+                      <motion.p key="ok" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="inline-flex items-center gap-2 font-mono text-sm text-sage-700">
+                        <CheckCircle2 size={16} /> {status.message}
+                      </motion.p>
+                    )}
+                    {status.kind === 'error' && (
+                      <motion.p key="err" initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="inline-flex items-center gap-2 font-mono text-sm text-clay-700">
+                        <XCircle size={16} /> {status.message}
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
+                  <button type="submit" disabled={status.kind === 'sending'} className="btn-primary sm:ml-auto">
+                    {status.kind === 'sending' ? <Loader2 size={16} className="animate-spin" /> : <Send size={16} />}
+                    {status.kind === 'sending' ? 'Sending…' : 'Send'}
+                  </button>
+                </div>
+              </form>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>

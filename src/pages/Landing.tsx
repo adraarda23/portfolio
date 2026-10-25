@@ -1,4 +1,3 @@
-import { Background } from '@/components/layout/Background'
 import { Footer } from '@/components/layout/Footer'
 import { Navbar } from '@/components/layout/Navbar'
 import { ScrollProgress } from '@/components/layout/ScrollProgress'
@@ -11,8 +10,7 @@ import { Skills } from '@/components/sections/Skills'
 
 export default function Landing() {
   return (
-    <div className="noise relative">
-      <Background />
+    <div className="relative">
       <ScrollProgress />
       <Navbar />
       <main>

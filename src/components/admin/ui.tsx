@@ -27,7 +27,7 @@ export function ToastProvider({ children }: { children: ReactNode }) {
               exit={{ opacity: 0, y: 8 }}
               className={cn(
                 'glass pointer-events-auto flex items-center gap-2 rounded-2xl px-4 py-3 text-sm shadow-card',
-                t.kind === 'ok' ? 'text-emerald-300' : 'text-rose-300',
+                t.kind === 'ok' ? 'text-sage-700' : 'text-clay-700',
               )}
             >
               {t.kind === 'ok' ? <CheckCircle2 size={16} /> : <XCircle size={16} />}
@@ -98,7 +98,7 @@ export function Confirm({ open, onCancel, onConfirm, text }: { open: boolean; on
         <button className="btn-ghost" onClick={onCancel}>
           Cancel
         </button>
-        <button className="btn bg-rose-500 text-stone-900 hover:bg-rose-400" onClick={onConfirm}>
+        <button className="btn bg-clay-600 text-white hover:bg-clay-700" onClick={onConfirm}>
           Delete
         </button>
       </div>

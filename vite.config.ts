@@ -26,8 +26,7 @@ export default defineConfig(({ mode }) => {
           manualChunks: {
             react: ['react', 'react-dom', 'react-router-dom'],
             motion: ['framer-motion'],
-          three: ['three'],
-        },
+          },
         },
       },
     },
