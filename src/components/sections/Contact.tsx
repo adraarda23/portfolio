@@ -54,31 +54,33 @@ export function Contact() {
 
           <div className="mt-10 grid min-w-0 gap-4 lg:grid-cols-[0.85fr_1.15fr]">
             <Reveal className="flex min-w-0 flex-col gap-4">
-              <div className="card p-5">
-                <p className="font-mono text-xs text-cocoa-400">email:</p>
-                <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
-                  <a href={`mailto:${contact.email}`} className="inline-flex min-w-0 items-center gap-2 font-semibold text-cocoa-900 hover:text-clay-700">
-                    <Mail size={16} className="shrink-0 text-clay-600" />
-                    <span className="break-all">{contact.email}</span>
-                  </a>
-                  <button
-                    type="button"
-                    onClick={copyEmail}
-                    aria-label="Copy email address"
-                    className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-cocoa-900/10 px-2.5 py-1 font-mono text-xs text-cocoa-600 transition hover:border-cocoa-900/30 hover:text-cocoa-900"
-                  >
-                    {copied ? <Check size={12} className="text-sage-700" /> : <Copy size={12} />}
-                    {copied ? 'copied' : 'copy'}
-                  </button>
+              {contact.email && (
+                <div className="card p-5">
+                  <p className="font-mono text-xs text-cocoa-500">email:</p>
+                  <div className="mt-1.5 flex flex-wrap items-center justify-between gap-x-3 gap-y-2">
+                    <a href={`mailto:${contact.email}`} className="inline-flex min-w-0 items-center gap-2 font-semibold text-cocoa-900 hover:text-clay-700">
+                      <Mail size={16} className="shrink-0 text-clay-600" />
+                      <span className="break-all">{contact.email}</span>
+                    </a>
+                    <button
+                      type="button"
+                      onClick={copyEmail}
+                      aria-label="Copy email address"
+                      className="inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-cocoa-900/10 px-2.5 py-1 font-mono text-xs text-cocoa-600 transition hover:border-cocoa-900/30 hover:text-cocoa-900"
+                    >
+                      {copied ? <Check size={12} className="text-sage-700" /> : <Copy size={12} />}
+                      {copied ? 'copied' : 'copy'}
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               {info.length > 0 && (
                 <div className="card divide-y divide-cocoa-900/[0.08]">
                   {info.map((item) => (
                     <div key={item.label} className="flex items-center gap-3 p-5">
-                      <item.icon size={16} className="shrink-0 text-cocoa-400" />
-                      <span className="w-16 shrink-0 font-mono text-xs text-cocoa-400">{item.label}:</span>
+                      <item.icon size={16} className="shrink-0 text-cocoa-500" />
+                      <span className="w-16 shrink-0 font-mono text-xs text-cocoa-500">{item.label}:</span>
                       {item.href ? (
                         <a href={item.href} className="min-w-0 truncate text-sm font-medium text-cocoa-900 hover:text-clay-700">
                           {item.value}

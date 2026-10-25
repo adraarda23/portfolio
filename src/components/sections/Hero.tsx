@@ -74,8 +74,8 @@ function JsonResponse() {
               <>
                 <span className="text-cocoa-300">[</span>
                 {value.map((v, j) => (
-                  <span key={v}>
-                    <span className="text-clay-200">"{v}"</span>
+                  <span key={`${v}-${j}`}>
+                    <span className="text-clay-200">{JSON.stringify(v)}</span>
                     {j < value.length - 1 && <span className="text-cocoa-300">, </span>}
                   </span>
                 ))}
@@ -84,7 +84,7 @@ function JsonResponse() {
             ) : typeof value === 'boolean' ? (
               <span className="text-sage-300">{String(value)}</span>
             ) : (
-              <span className="text-clay-200">"{value}"</span>
+              <span className="text-clay-200">{JSON.stringify(value)}</span>
             )}
             {i < entries.length - 1 && <span className="text-cocoa-300">,</span>}
           </motion.span>
@@ -115,7 +115,7 @@ export function Hero() {
           <motion.div variants={container} initial="hidden" animate="show" className="min-w-0">
             <motion.p variants={item} className="font-mono text-sm text-cocoa-500">
               <span className="text-clay-600">$</span> whoami
-              {greeting && <span className="ml-3 text-cocoa-400"># {greeting}</span>}
+              {greeting && <span className="ml-3 text-cocoa-500"># {greeting}</span>}
             </motion.p>
 
             <motion.h1 variants={item} className="mt-3 font-display text-[2.5rem] font-semibold leading-[1.05] tracking-tight text-cocoa-900 sm:text-6xl">
@@ -173,7 +173,7 @@ export function Hero() {
 
           <a
             href="#about"
-            className="col-span-full hidden w-fit items-center gap-2 font-mono text-xs text-cocoa-400 transition hover:text-clay-600 lg:inline-flex"
+            className="col-span-full hidden w-fit items-center gap-2 font-mono text-xs text-cocoa-500 transition hover:text-clay-600 lg:inline-flex"
             aria-label="Scroll to about"
           >
             <ArrowDown size={14} /> scroll

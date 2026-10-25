@@ -77,7 +77,7 @@ export function Navbar() {
             </span>
             <span>
               {handle}
-              <span className="text-cocoa-400">@portfolio</span>
+              <span className="text-cocoa-500">@portfolio</span>
               <span className="text-clay-600">:~</span>
             </span>
           </button>
@@ -116,7 +116,8 @@ export function Navbar() {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
-            className="fixed inset-0 top-16 z-40 bg-cream-100 md:hidden"
+            className="fixed inset-x-0 bottom-0 top-16 z-40 overflow-y-auto overscroll-contain bg-cream-100 md:hidden"
+            onClick={(e) => e.target === e.currentTarget && setOpen(false)}
           >
             <ul className="container-x flex flex-col py-6">
               {NAV_SECTIONS.map((s, i) => (
@@ -125,7 +126,7 @@ export function Navbar() {
                     onClick={() => go(s.id)}
                     className="flex w-full items-center gap-4 border-b border-cocoa-900/[0.06] py-4 text-left font-mono text-lg"
                   >
-                    <span className="text-xs text-cocoa-400">{String(i).padStart(2, '0')}</span>
+                    <span className="text-xs text-cocoa-500">{String(i).padStart(2, '0')}</span>
                     <span className={active === s.id ? 'text-clay-600' : 'text-cocoa-800'}>/{s.label}</span>
                   </button>
                 </li>

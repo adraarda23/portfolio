@@ -14,7 +14,7 @@ const cocoa = {
   200: '#E2D5C8',
   300: '#CBB9A8',
   400: '#A8937F',
-  500: '#857262',
+  500: '#76624F',
   600: '#6B5A4E',
   700: '#54453B',
   800: '#3D312A',
@@ -94,7 +94,7 @@ export default {
           soft: clay[500],
           cyan: sage[600],
           pink: clay[400],
-          amber: honey[600],
+          amber: honey[700],
         },
       },
       fontFamily: {

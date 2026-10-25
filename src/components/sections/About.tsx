@@ -21,7 +21,7 @@ export function About() {
 
           <div className="mt-10 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
             <Reveal className="card p-5 sm:p-7">
-              <p className="font-mono text-xs text-cocoa-400">what_i_do[]</p>
+              <p className="font-mono text-xs text-cocoa-500">what_i_do[]</p>
               <ul className="mt-4 space-y-3">
                 {about.whatIDo.map((w, i) => (
                   <li key={i} className="flex gap-3 text-[15px] leading-relaxed text-cocoa-700">
@@ -33,17 +33,19 @@ export function About() {
               {about.ctaText && <p className="mt-6 border-t border-cocoa-900/[0.08] pt-5 text-pretty text-[15px] leading-relaxed text-cocoa-600">{about.ctaText}</p>}
             </Reveal>
 
-            <Reveal delay={0.08} className="card divide-y divide-cocoa-900/[0.08]">
-              {facts.map((f) => (
-                <div key={f.key} className="grid grid-cols-[6.5rem_1fr] gap-3 p-5 sm:grid-cols-[7.5rem_1fr]">
-                  <p className="pt-0.5 font-mono text-xs text-cocoa-400">{f.key}:</p>
-                  <div className="min-w-0">
-                    <p className="font-semibold leading-snug text-cocoa-900">{f.title}</p>
-                    {f.detail && <p className="mt-0.5 text-sm text-cocoa-600">{f.detail}</p>}
+            {facts.length > 0 && (
+              <Reveal delay={0.08} className="card divide-y divide-cocoa-900/[0.08]">
+                {facts.map((f) => (
+                  <div key={f.key} className="grid grid-cols-[6.5rem_1fr] gap-3 p-5 sm:grid-cols-[7.5rem_1fr]">
+                    <p className="pt-0.5 font-mono text-xs text-cocoa-500">{f.key}:</p>
+                    <div className="min-w-0">
+                      <p className="font-semibold leading-snug text-cocoa-900">{f.title}</p>
+                      {f.detail && <p className="mt-0.5 text-sm text-cocoa-600">{f.detail}</p>}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </Reveal>
+                ))}
+              </Reveal>
+            )}
           </div>
 
           {stats.length > 0 && (

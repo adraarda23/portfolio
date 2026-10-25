@@ -36,7 +36,7 @@ export function Experience() {
                     </div>
                     <div className="min-w-0">
                       <h3 className="text-lg font-semibold leading-snug text-cocoa-900">
-                        {exp.title} <span className="text-cocoa-400">@</span> <span className="text-clay-700">{exp.company}</span>
+                        {exp.title} <span className="text-cocoa-500">@</span> <span className="text-clay-700">{exp.company}</span>
                       </h3>
                       {exp.location && (
                         <p className="mt-1 inline-flex items-center gap-1.5 text-xs text-cocoa-500">

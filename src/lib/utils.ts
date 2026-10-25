@@ -19,10 +19,13 @@ export const initials = (name: string) =>
     .join('')
 
 /** `level` on a skill stores years of active use; values above 30 are legacy percentages and are hidden. */
-export const yearsLabel = (years: number) => (years > 0 && years <= 30 ? `${years} ${years === 1 ? 'yr' : 'yrs'}` : null)
-
 /** Years of active use for a skill, or 0 when unset / a legacy percentage. */
 export const yearsOf = (level: number) => (level > 0 && level <= 30 ? level : 0)
+
+export const yearsLabel = (level: number) => {
+  const years = yearsOf(level)
+  return years ? `${years} ${years === 1 ? 'yr' : 'yrs'}` : null
+}
 
 export const slugify = (value: string) =>
   value
@@ -44,7 +47,7 @@ function parseMonth(text: string, now: Date): number | null {
   const t = text.trim()
   if (ONGOING.test(t)) return now.getFullYear() * 12 + now.getMonth()
   const m = t.match(/^([\p{L}]{3,})\.?\s+(\d{4})$/u)
-  const month = m ? MONTHS[m[1].slice(0, 3).toLocaleLowerCase('tr')] : undefined
+  const month = m ? MONTHS[m[1].slice(0, 3).toLocaleLowerCase('tr').replace(/ı/g, 'i')] : undefined
   return m && month !== undefined ? Number(m[2]) * 12 + month : null
 }
 

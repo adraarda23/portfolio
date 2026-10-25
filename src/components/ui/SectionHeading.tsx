@@ -18,7 +18,7 @@ export function SectionHeading({ index, method = 'GET', path, title, description
       <div className="max-w-2xl">
         <Reveal>
           <p className="flex items-center gap-2 font-mono text-xs text-cocoa-500 sm:text-sm">
-            <span className="text-cocoa-400">{String(index).padStart(2, '0')}</span>
+            <span className="text-cocoa-500">{String(index).padStart(2, '0')}</span>
             <span className={`method ${method === 'GET' ? 'bg-sage-100 text-sage-800' : 'bg-clay-100 text-clay-700'}`}>{method}</span>
             <span className="text-cocoa-700">{path}</span>
           </p>
