@@ -44,7 +44,7 @@ export default function Admin() {
   const sidebar = (
     <>
       <div className="flex items-center gap-3 px-2">
-        <span className="grid h-10 w-10 place-items-center rounded-2xl bg-gradient-to-br from-accent to-accent-cyan font-display text-sm font-bold text-stone-900">
+        <span className="grid h-10 w-10 place-items-center rounded-2xl bg-cocoa-900 font-mono text-xs font-semibold text-cream-50">
           {initials(data.profile.name)}
         </span>
         <div className="min-w-0">
