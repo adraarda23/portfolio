@@ -1,95 +1,74 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { useState } from 'react'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { Icon } from '@/lib/icons'
-import { yearsLabel } from '@/lib/utils'
+import { yearsOf } from '@/lib/utils'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
 
-const tints = ['bg-clay-100 text-clay-700', 'bg-sage-100 text-sage-700', 'bg-honey-100 text-honey-700', 'bg-cream-300 text-cocoa-700']
+/** One block per year of active use, so the bar reads like a tally. */
+function YearBar({ years, scale }: { years: number; scale: number }) {
+  return (
+    <div className="flex gap-[3px]" aria-hidden>
+      {Array.from({ length: scale }, (_, i) => (
+        <span key={i} className={`h-2.5 w-2 rounded-[2px] sm:w-2.5 ${i < years ? 'bg-clay-500' : 'bg-cocoa-900/[0.08]'}`} />
+      ))}
+    </div>
+  )
+}
 
 export function Skills() {
   const { data } = usePortfolio()
-  const categories = data.skillCategories
-  const [activeId, setActiveId] = useState<number | 'all'>('all')
-  const visible = activeId === 'all' ? categories : categories.filter((c) => c.id === activeId)
-  const allSkills = categories.flatMap((c) => c.skills)
+  const categories = data.skillCategories.filter((c) => c.skills.length > 0)
+  const maxYears = Math.max(0, ...categories.flatMap((c) => c.skills.map((s) => yearsOf(s.level))))
+  const scale = Math.min(Math.max(maxYears, 5), 10)
 
   return (
-    <section id="skills" className="section overflow-hidden">
+    <section id="skills" className="section">
       <div className="container-x">
-        <SectionHeading
-          eyebrow="Toolbox"
-          title="Tools I reach for every day."
-          description="Languages, frameworks and tools I've used in real projects — with roughly how long I've been working with each."
-          align="center"
-        />
+        <div className="rail">
+          <SectionHeading
+            index={3}
+            path="/skills"
+            title="Skills"
+            action={
+              <p className="flex items-center gap-2 font-mono text-xs text-cocoa-500">
+                <span className="h-2.5 w-2.5 rounded-[2px] bg-clay-500" /> = 1 year of active development
+              </p>
+            }
+          />
 
-        <Reveal className="mt-10" delay={0.1}>
-          <div className="flex flex-wrap justify-center gap-2">
-            <button onClick={() => setActiveId('all')} className={`chip ${activeId === 'all' ? 'chip-active' : 'chip-idle'}`}>
-              All
-            </button>
-            {categories.map((c) => (
-              <button key={c.id} onClick={() => setActiveId(c.id)} className={`chip whitespace-nowrap ${activeId === c.id ? 'chip-active' : 'chip-idle'}`}>
-                <span>{c.icon}</span>
-                {c.title}
-              </button>
-            ))}
-          </div>
-        </Reveal>
-
-        <motion.div layout className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          <AnimatePresence mode="popLayout">
-            {visible.map((cat) => {
-              const tint = tints[categories.indexOf(cat) % tints.length]
+          <div className="mt-10 grid gap-4 md:grid-cols-2">
+            {categories.map((cat, i) => {
+              const skills = [...cat.skills].sort((a, b) => yearsOf(b.level) - yearsOf(a.level) || a.displayOrder - b.displayOrder)
               return (
-                <motion.div
-                  layout
-                  key={cat.id}
-                  initial={{ opacity: 0, scale: 0.97 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.97 }}
-                  transition={{ duration: 0.3 }}
-                  className="card p-4 sm:p-6"
-                >
-                  <div className="flex items-center justify-between gap-3">
-                    <h3 className="flex items-center gap-3 font-display text-lg font-semibold text-cocoa-900">
-                      <span className={`grid h-10 w-10 place-items-center rounded-2xl text-lg ${tint}`}>{cat.icon}</span>
-                      {cat.title}
-                    </h3>
-                    <span className="rounded-full bg-cream-200 px-2.5 py-0.5 text-xs font-semibold text-cocoa-600">{cat.skills.length}</span>
-                  </div>
-                  <ul className="mt-4 grid grid-cols-2 gap-2 sm:mt-5 sm:grid-cols-1 sm:gap-0 sm:divide-y sm:divide-cocoa-900/[0.06]">
-                    {cat.skills.map((s) => (
-                      <li key={s.id} className="flex min-w-0 items-center gap-2.5 rounded-2xl bg-cream-100 p-2.5 sm:gap-3 sm:rounded-none sm:bg-transparent sm:px-0">
-                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-cream-50 text-base text-cocoa-700 sm:bg-cream-200">
-                          <Icon name={s.iconClass} />
-                        </span>
-                        <div className="min-w-0 flex-1 sm:flex sm:items-center sm:gap-3">
-                          <p className="truncate text-sm font-medium text-cocoa-800 sm:flex-1">{s.name}</p>
-                          {yearsLabel(s.level) && <span className="block text-xs font-semibold text-clay-600 sm:shrink-0">{yearsLabel(s.level)}</span>}
-                        </div>
-                      </li>
-                    ))}
+                <Reveal key={cat.id} delay={(i % 2) * 0.06} className="card p-5 sm:p-6">
+                  <h3 className="flex items-center justify-between font-mono text-sm font-semibold text-cocoa-900">
+                    <span>
+                      <span className="text-cocoa-400">./</span>
+                      {cat.title.toLowerCase()}
+                    </span>
+                    <span className="text-xs font-normal text-cocoa-400">{skills.length}</span>
+                  </h3>
+                  <ul className="mt-4 space-y-3">
+                    {skills.map((s) => {
+                      const years = yearsOf(s.level)
+                      return (
+                        <li key={s.id} className="flex items-center gap-3">
+                          <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-cream-200 text-sm text-cocoa-700">
+                            <Icon name={s.iconClass} />
+                          </span>
+                          <span className="min-w-0 flex-1 truncate text-sm font-medium text-cocoa-800">{s.name}</span>
+                          <YearBar years={years} scale={scale} />
+                          <span className="w-12 shrink-0 text-right font-mono text-xs text-cocoa-600">
+                            {years ? `${years} ${years === 1 ? 'yr' : 'yrs'}` : '—'}
+                          </span>
+                        </li>
+                      )
+                    })}
                   </ul>
-                </motion.div>
+                </Reveal>
               )
             })}
-          </AnimatePresence>
-        </motion.div>
-      </div>
-
-      <div className="mask-fade-x mt-16 overflow-hidden border-y border-cocoa-900/[0.06] bg-cream-50/60 py-5 sm:mt-20">
-        <div className="flex w-max animate-marquee gap-10 pr-10">
-          {[...allSkills, ...allSkills].map((s, i) => (
-            <span key={`${s.id}-${i}`} className="inline-flex items-center gap-3 text-cocoa-500">
-              <span className="text-xl text-clay-500">
-                <Icon name={s.iconClass} />
-              </span>
-              <span className="font-display text-lg font-medium">{s.name}</span>
-            </span>
-          ))}
+          </div>
         </div>
       </div>
     </section>

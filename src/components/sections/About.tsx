@@ -1,89 +1,65 @@
-import { Briefcase, Coffee, GraduationCap, Target } from 'lucide-react'
 import { usePortfolio } from '@/context/PortfolioContext'
 import { Counter } from '@/components/ui/Counter'
 import { Reveal } from '@/components/ui/Reveal'
 import { SectionHeading } from '@/components/ui/SectionHeading'
-import { SpotlightCard } from '@/components/ui/SpotlightCard'
-
-const facts = [
-  { key: 'education', icon: GraduationCap, label: 'Education', tint: 'bg-sage-100 text-sage-700', glow: 'rgba(151, 176, 142, 0.22)' },
-  { key: 'current', icon: Briefcase, label: 'Currently', tint: 'bg-clay-100 text-clay-700', glow: 'rgba(229, 148, 111, 0.2)' },
-  { key: 'focus', icon: Target, label: 'Focus', tint: 'bg-honey-100 text-honey-700', glow: 'rgba(237, 191, 89, 0.24)' },
-] as const
 
 export function About() {
   const { data } = usePortfolio()
   const { about, stats } = data
 
-  const factText = {
-    education: [about.educationTitle, about.educationDetail],
-    current: [about.currentRole, about.currentCompany],
-    focus: [about.focusTitle, about.focusDetail],
-  }
+  const facts = [
+    { key: 'education', title: about.educationTitle, detail: about.educationDetail },
+    { key: 'current', title: about.currentRole, detail: about.currentCompany },
+    { key: 'focus', title: about.focusTitle, detail: about.focusDetail },
+  ].filter((f) => f.title)
 
   return (
     <section id="about" className="section">
       <div className="container-x">
-        <SectionHeading eyebrow="About me" title="A little about who I am and how I work." description={about.intro} />
+        <div className="rail">
+          <SectionHeading index={1} path="/about" title="About" description={about.intro} />
 
-        <div className="mt-12 grid gap-4 sm:mt-14 lg:grid-cols-3">
-          <Reveal className="lg:col-span-2 lg:row-span-2">
-            <div className="card h-full bg-cocoa-900 p-6 text-cream-100 sm:p-9">
-              <div className="flex items-center gap-3">
-                <span className="grid h-11 w-11 place-items-center rounded-2xl bg-clay-500 text-cream-50">
-                  <Coffee size={20} />
-                </span>
-                <h3 className="font-display text-2xl font-semibold text-cream-50">What I do</h3>
-              </div>
-              <ul className="mt-7 grid gap-3 sm:grid-cols-2">
+          <div className="mt-10 grid gap-4 lg:grid-cols-[1.2fr_1fr]">
+            <Reveal className="card p-5 sm:p-7">
+              <p className="font-mono text-xs text-cocoa-400">what_i_do[]</p>
+              <ul className="mt-4 space-y-3">
                 {about.whatIDo.map((w, i) => (
-                  <li key={i} className="flex items-start gap-3 rounded-2xl bg-cream-50/[0.06] p-4 text-[15px] leading-relaxed text-cream-200 ring-1 ring-cream-50/10">
-                    <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-honey-300 text-xs font-bold text-cocoa-900">{i + 1}</span>
+                  <li key={i} className="flex gap-3 text-[15px] leading-relaxed text-cocoa-700">
+                    <span className="mt-0.5 font-mono text-sm text-clay-600">→</span>
                     {w}
                   </li>
                 ))}
               </ul>
-              <p className="mt-7 text-pretty leading-relaxed text-cream-300">{about.ctaText}</p>
-            </div>
-          </Reveal>
+              {about.ctaText && <p className="mt-6 border-t border-cocoa-900/[0.08] pt-5 text-pretty text-[15px] leading-relaxed text-cocoa-600">{about.ctaText}</p>}
+            </Reveal>
 
-          {facts.map((f, i) => {
-            const [title, detail] = factText[f.key]
-            return (
-              <Reveal key={f.key} delay={0.08 * (i + 1)} className={f.key === 'focus' ? 'sm:col-span-2 lg:col-span-1' : ''}>
-                <SpotlightCard className="h-full p-6" color={f.glow}>
-                  <div className="flex items-start gap-4">
-                    <span className={`grid h-11 w-11 shrink-0 place-items-center rounded-2xl ${f.tint}`}>
-                      <f.icon size={19} />
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-xs font-semibold uppercase tracking-wider text-cocoa-500">{f.label}</p>
-                      <h4 className="mt-1 font-display text-lg font-semibold leading-snug text-cocoa-900">{title}</h4>
-                      <p className="mt-1 text-sm text-cocoa-600">{detail}</p>
-                    </div>
+            <Reveal delay={0.08} className="card divide-y divide-cocoa-900/[0.08]">
+              {facts.map((f) => (
+                <div key={f.key} className="grid grid-cols-[6.5rem_1fr] gap-3 p-5 sm:grid-cols-[7.5rem_1fr]">
+                  <p className="pt-0.5 font-mono text-xs text-cocoa-400">{f.key}:</p>
+                  <div className="min-w-0">
+                    <p className="font-semibold leading-snug text-cocoa-900">{f.title}</p>
+                    {f.detail && <p className="mt-0.5 text-sm text-cocoa-600">{f.detail}</p>}
                   </div>
-                </SpotlightCard>
-              </Reveal>
-            )
-          })}
-
-          <Reveal delay={0.16} className="lg:col-span-2">
-            <div className="card grid h-full grid-cols-2 sm:grid-cols-4">
-              {stats.map((s, i) => (
-                <div
-                  key={s.id}
-                  className={`p-5 text-center sm:p-6 ${i % 2 === 1 ? 'border-l border-cocoa-900/[0.06]' : ''} ${
-                    i > 1 ? 'border-t border-cocoa-900/[0.06] sm:border-t-0' : ''
-                  } ${i === 2 ? 'sm:border-l' : ''}`}
-                >
-                  <p className="font-display text-3xl font-semibold text-clay-600 sm:text-4xl">
-                    <Counter value={s.number} />
-                  </p>
-                  <p className="mt-1 text-xs leading-snug text-cocoa-600 sm:text-sm">{s.label}</p>
                 </div>
               ))}
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
+
+          {stats.length > 0 && (
+            <Reveal delay={0.12} className="mt-4">
+              <dl className="card grid grid-cols-2 divide-cocoa-900/[0.08] sm:grid-cols-4 sm:divide-x">
+                {stats.map((s, i) => (
+                  <div key={s.id} className={`flex flex-col-reverse p-5 ${i % 2 === 1 ? 'border-l border-cocoa-900/[0.08] sm:border-l-0' : ''} ${i > 1 ? 'border-t border-cocoa-900/[0.08] sm:border-t-0' : ''}`}>
+                    <dt className="mt-1 text-xs leading-snug text-cocoa-500 sm:text-sm">{s.label}</dt>
+                    <dd className="font-mono text-2xl font-semibold text-cocoa-900 sm:text-3xl">
+                      <Counter value={s.number} />
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+            </Reveal>
+          )}
         </div>
       </div>
     </section>
