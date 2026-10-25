@@ -11,6 +11,8 @@ export interface FieldDef<T> {
   hint?: string
   half?: boolean
   required?: boolean
+  /** Send null instead of '' when left empty (only for fields the API declares nullable). */
+  nullable?: boolean
   options?: { value: string | number; label: string }[]
 }
 
@@ -39,7 +41,7 @@ export function fromValues<T extends object>(values: Values, fields: FieldDef<T>
         .filter(Boolean)
     else if (f.type === 'number') out[f.key] = Number(raw ?? 0)
     else if (f.type === 'select' && f.options?.length && typeof f.options[0].value === 'number') out[f.key] = Number(raw)
-    else out[f.key] = raw === '' ? null : raw
+    else out[f.key] = raw === '' && f.nullable ? null : raw
   }
   return out as T
 }

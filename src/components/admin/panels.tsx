@@ -126,8 +126,8 @@ const projectFields: FieldDef<Project>[] = [
   { key: 'year', label: 'Year', half: true, placeholder: '2025' },
   { key: 'description', label: 'Description', type: 'textarea' },
   { key: 'technologies', label: 'Technologies (comma separated)', type: 'list' },
-  { key: 'githubUrl', label: 'GitHub URL', half: true, hint: 'Leave empty for private projects' },
-  { key: 'demoUrl', label: 'Demo URL', half: true },
+  { key: 'githubUrl', label: 'GitHub URL', half: true, nullable: true, hint: 'Leave empty for private projects' },
+  { key: 'demoUrl', label: 'Demo URL', half: true, nullable: true },
   { key: 'displayOrder', label: 'Order', type: 'number', half: true },
 ]
 export function ProjectsPanel() {

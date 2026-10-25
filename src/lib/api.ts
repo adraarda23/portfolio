@@ -56,7 +56,10 @@ async function request<T>(path: string, init: RequestInit = {}, withAuth = false
     let message = `Request failed (${response.status})`
     try {
       const body = await response.json()
+      // ASP.NET validation errors arrive as problem+json: { title, errors: { Field: [msg] } }
+      const firstError = body?.errors ? (Object.values(body.errors).flat()[0] as string | undefined) : undefined
       if (body?.message) message = body.message
+      else if (firstError) message = firstError
     } catch {
       /* non-JSON error body */
     }
