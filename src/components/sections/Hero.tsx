@@ -13,29 +13,38 @@ const item = {
   show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 }
 
-type JsonValue = string | string[]
+type JsonValue = string | string[] | boolean
 
 /** Pretty-printed JSON with syntax colours, rendered from live portfolio data. */
 function JsonResponse() {
   const { data } = usePortfolio()
   const { profile, about, contact, skillCategories } = data
 
-  const skills = skillCategories.flatMap((c) => c.skills)
-  const stack = [...skills]
-    .sort((a, b) => yearsOf(b.level) - yearsOf(a.level))
+  // Only skills with years set count, so the stack reflects what was entered in the admin panel.
+  const stack = skillCategories
+    .flatMap((c) => c.skills)
+    .filter((s) => yearsOf(s.level) > 0)
+    .sort((a, b) => yearsOf(b.level) - yearsOf(a.level) || a.displayOrder - b.displayOrder)
     .slice(0, 4)
     .map((s) => s.name)
 
+  // "Bursa / İstanbul" becomes ["Bursa", "İstanbul"]; commas stay part of a place ("Bursa, Turkey").
+  const places = (contact.location ?? '')
+    .split(/\s*[/|;·]\s*/)
+    .map((p) => p.trim())
+    .filter(Boolean)
+  const company = (about.currentCompany ?? '').trim()
+
   const entries = (
     [
-      ['name', profile.name],
-      ['role', profile.title],
-      ['location', contact.location],
-      ['currentlyAt', about.currentCompany],
-      ['focus', about.focusTitle],
+      ['name', profile.name ?? ''],
+      ['role', profile.title ?? ''],
+      ['location', places.length > 1 ? places : places[0] ?? ''],
+      company ? ['currentlyAt', company] : ['openToWork', true],
+      ['focus', about.focusTitle ?? ''],
       ['stack', stack],
     ] as [string, JsonValue][]
-  ).filter(([, v]) => v.length > 0)
+  ).filter(([, v]) => typeof v === 'boolean' || v.length > 0)
 
   return (
     <div className="card bg-cocoa-900 text-cream-100 shadow-lift">
@@ -72,6 +81,8 @@ function JsonResponse() {
                 ))}
                 <span className="text-cocoa-300">]</span>
               </>
+            ) : typeof value === 'boolean' ? (
+              <span className="text-sage-300">{String(value)}</span>
             ) : (
               <span className="text-clay-200">"{value}"</span>
             )}
@@ -92,7 +103,7 @@ function JsonResponse() {
 export function Hero() {
   const { data } = usePortfolio()
   const { profile, socialLinks, contact } = data
-  const greeting = profile.subtitle.replace(/^\p{Extended_Pictographic}\s*/u, '')
+  const greeting = (profile.subtitle ?? '').replace(/^\p{Extended_Pictographic}\s*/u, '')
 
   return (
     <section id="home" className="section overflow-hidden">

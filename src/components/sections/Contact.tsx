@@ -42,7 +42,7 @@ export function Contact() {
   }
 
   const info = [
-    { icon: Phone, label: 'phone', value: contact.phone, href: `tel:${contact.phone.replace(/\s/g, '')}` },
+    { icon: Phone, label: 'phone', value: contact.phone, href: `tel:${(contact.phone ?? '').replace(/\s/g, '')}` },
     { icon: MapPin, label: 'location', value: contact.location },
   ].filter((i) => i.value)
 

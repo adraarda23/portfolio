@@ -17,7 +17,7 @@ export function Navbar() {
   const [active, setActive] = useState<string>('home')
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
-  const handle = data.profile.name.split(' ')[0].toLowerCase()
+  const handle = (data.profile.name ?? '').split(' ')[0].toLowerCase() || 'dev'
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 16)
